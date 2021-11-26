@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data xmlns="http://www.woltlab.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/2019/eventListener.xsd">
+    <import>
+		<eventlistener name="AddToGroup">
+			<eventclassname>wcf\data\user\minecraft\MinecraftAction</eventclassname>
+			<eventname>finalizeAction</eventname>
+			<listenerclassname>wcf\system\event\listener\AddToGroup</listenerclassname>
+		</eventlistener>
+		<eventlistener name="AddMinecraft">
+			<eventclassname>wcf\data\user\minecraft\MinecraftAction</eventclassname>
+			<eventname>finalizeAction</eventname>
+			<listenerclassname>wcf\system\event\listener\AddMinecraft</listenerclassname>
+		</eventlistener>
+    </import>
+</data>
