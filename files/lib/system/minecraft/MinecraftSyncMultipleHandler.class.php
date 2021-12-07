@@ -2,7 +2,9 @@
 
 namespace wcf\system\minecraft;
 
-abstract class MinecraftSyncMulipleHandler extends AbstractMultipleMinecraftHandler implements IMinecraftSyncHandler
+use wcf\util\StringUtil;
+
+class MinecraftSyncMultipleHandler extends AbstractMultipleMinecraftHandler implements IMinecraftSyncMultipleHandler
 {
 
     /**
@@ -10,8 +12,8 @@ abstract class MinecraftSyncMulipleHandler extends AbstractMultipleMinecraftHand
      */
     public function init()
     {
-        if (MINECRAFT_LINKER_ENABLED && MINECRAFT_SYNC_ENABLED) {
-            $this->minecraftIDs = explode("\n", StringUtil::unifyNewlines(MINECRAFT_SYNC_IDENTITY));
+        if (MINECRAFT_SYNC_ENABLED && MINECRAFT_LINKER_ENABLED && MINECRAFT_LINKER_IDENTITY) {
+            $this->minecraftIDs = explode("\n", StringUtil::unifyNewlines(MINECRAFT_LINKER_IDENTITY));
         }
 
         parent::init();
@@ -28,11 +30,11 @@ abstract class MinecraftSyncMulipleHandler extends AbstractMultipleMinecraftHand
         if (!empty($this->groups)) {
             return $this->groups;
         }
-        foreach (getMinecrafts() as &$minecraft) {
-            $handler = getHandler($minecraft);
+        foreach ($this->getMinecrafts() as &$minecraft) {
+            $handler = $this->getHandler($minecraft->minecraftID);
             $tmpGroups = $handler->getGroups();
             if (!empty($tmpGroups)) {
-                $this->groups = $this->groups . [$minecraft->minecraftID => $tmpGroups];
+                $this->groups .= [$minecraft->minecraftID => $tmpGroups];
             }
         }
         return $this->groups;
@@ -41,9 +43,57 @@ abstract class MinecraftSyncMulipleHandler extends AbstractMultipleMinecraftHand
     /**
      * @inheritDoc
      */
-    public function getHandler(minecraftsyncsinglehandler $mc)
+    public function getPlayerGroups(string $uuid)
     {
-        return new MinecraftSyncSingleHandler($mc);
+        $playerGroups = [];
+        foreach ($this->getMinecrafts() as &$minecraft) {
+            $handler = $this->getHandler($minecraft->minecraftID);
+            $tmpGroups = $handler->getPlayerGroups($uuid);
+            if (!empty($tmpGroups)) {
+                $playerGroups .= [$minecraft->minecraftID => $tmpGroups];
+            }
+        }
+        return $playerGroups;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addPlayerToGroup(string $uuid, string $group)
+    {
+        $responses = [];
+        foreach ($this->getMinecrafts() as &$minecraft) {
+            $handler = $this->getHandler($minecraft->minecraftID);
+            $tmpResponse = $handler->addPlayerToGroup($uuid, $group);
+            if (!empty($tmpGroups)) {
+                $responses .= [$minecraft->minecraftID => $tmpResponse];
+            }
+        }
+        return $responses;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removePlayerFromGroup(string $uuid, string $group)
+    {
+        $responses = [];
+        foreach ($this->getMinecrafts() as &$minecraft) {
+            $handler = $this->getHandler($minecraft->minecraftID);
+            $tmpResponse = $handler->removePlayerFromGroup($uuid, $group);
+            if (!empty($tmpGroups)) {
+                $responses .= [$minecraft->minecraftID => $tmpResponse];
+            }
+        }
+        return $responses;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getHandler(int $minecraftID)
+    {
+        return new MinecraftSyncSingleHandler($minecraftID);
     }
 
     public function syncUser($user)
@@ -62,10 +112,16 @@ abstract class MinecraftSyncMulipleHandler extends AbstractMultipleMinecraftHand
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     public function sync($minecraftUUID)
     {
+        $responses = [];
         foreach (getMinecrafts() as &$minecraft) {
-
+            $handler = $this->getHandler($minecraft->minecraftID);
+            $responses .= [$minecraft => $handler->sync($minecraftUUID)];
         }
+        return $responses;
     }
 }

@@ -5,7 +5,7 @@
         <packagename language="de"><![CDATA[Minecraft-Sync]]></packagename>
         <packagedescription><![CDATA[Syncs Groups between Minecraft and WSC.]]></packagedescription>
         <packagedescription language="de"><![CDATA[Synchronisiert Gruppen zwischen Minecraft und WSC.]]></packagedescription>
-        <version>1.0.0</version>
+        <version>1.0.0 dev</version>
         <date>2021-11-08</date>
     </packageinformation>
 
@@ -15,7 +15,7 @@
 
     <requiredpackages>
         <requiredpackage minversion="5.3.0">com.woltlab.wcf</requiredpackage>
-        <requiredpackage minversion="1.0.0" file="requirements/de.xxschrandxx.wsc.minecraft-linker.tar.gz">de.xxschrarndxx.wsc.minecraft-linker</requiredpackage>
+        <requiredpackage minversion="1.0.0" file="requirements/de.xxschrandxx.wsc.minecraft-linker.tar">de.xxschrandxx.wsc.minecraft-linker</requiredpackage>
     </requiredpackages>
 
     <excludedpackages>
@@ -23,6 +23,13 @@
     </excludedpackages>
 
     <instructions type="install">
+		<instruction type="acpTemplate"/>
         <instruction type="eventListener"/>
+        <instruction type="file"/>
+        <instruction type="language"/>
+        <instruction type="option"/>
+        <instruction type="templateListener"/>
+        <instruction type="userGroupOption"/>
+        <instruction type="script">acp/install_de.xxschrandxx.wsc.minecraft-sync_1.0.0.php</instruction>
     </instructions>
 </package>

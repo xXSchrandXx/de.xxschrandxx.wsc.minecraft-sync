@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data xmlns="http://www.woltlab.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/2019/eventListener.xsd">
     <import>
-		<eventlistener name="AddToGroup">
+		<eventlistener name="minecraftACPGroupAdd">
+			<eventclassname>wcf\acp\form\UserGroupAddForm</eventclassname>
+			<eventname>readFormParameters,validate,save,assignVariables</eventname>
+			<environment>admin</environment>
+			<inherit>1</inherit>
+			<listenerclassname>wcf\system\event\listener\MinecraftAcpGroupAddListener</listenerclassname>
+		</eventlistener>
+		<!-- TODO
+		<eventlistener name="minecraftUserGroupModify">
 			<eventclassname>wcf\data\user\minecraft\MinecraftAction</eventclassname>
 			<eventname>finalizeAction</eventname>
-			<listenerclassname>wcf\system\event\listener\AddToGroup</listenerclassname>
+			<listenerclassname>wcf\system\event\listener\???</listenerclassname>
 		</eventlistener>
-		<eventlistener name="AddMinecraft">
-			<eventclassname>wcf\data\user\minecraft\MinecraftAction</eventclassname>
-			<eventname>finalizeAction</eventname>
-			<listenerclassname>wcf\system\event\listener\AddMinecraft</listenerclassname>
-		</eventlistener>
+		-->
     </import>
 </data>
