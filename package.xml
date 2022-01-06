@@ -5,7 +5,7 @@
         <packagename language="de"><![CDATA[Minecraft-Sync]]></packagename>
         <packagedescription><![CDATA[Syncs Groups between Minecraft and WSC.]]></packagedescription>
         <packagedescription language="de"><![CDATA[Synchronisiert Gruppen zwischen Minecraft und WSC.]]></packagedescription>
-        <version>1.0.0 dev</version>
+        <version>0.0.1</version>
         <date>2021-11-08</date>
     </packageinformation>
 
@@ -30,6 +30,6 @@
         <instruction type="option"/>
         <instruction type="templateListener"/>
         <instruction type="userGroupOption"/>
-        <instruction type="script">acp/install_de.xxschrandxx.wsc.minecraft-sync_1.0.0.php</instruction>
+        <instruction type="script">acp/install_de.xxschrandxx.wsc.minecraft-sync.php</instruction>
     </instructions>
 </package>
