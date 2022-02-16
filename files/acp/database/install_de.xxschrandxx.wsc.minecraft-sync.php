@@ -10,8 +10,8 @@ use wcf\system\database\table\index\DatabaseTableForeignKey;
 use wcf\system\WCF;
 
 $tables = [
-    // wcf1_user_group
-    DatabaseTable::create('wcf1_user_group')
+    // _user_group
+    DatabaseTable::create('wcf' . WCF_N . '_user_group')
         ->columns([
             BlobDatabaseTableColumn::create('minecraftGroups')
         ]),

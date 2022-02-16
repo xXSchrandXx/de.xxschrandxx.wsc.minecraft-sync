@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package name="de.xxschrandxx.wsc.minecraft-sync" xmlns="https://www.woltlab.com" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.woltlab.com https://www.woltlab.com/XSD/vortex/package.xsd">
+<package name="de.xxschrandxx.wsc.minecraft-sync" xmlns="https://www.woltlab.com" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.woltlab.com https://www.woltlab.com/XSD/5.4/package.xsd">
     <packageinformation>
         <packagename><![CDATA[Minecraft Sync]]></packagename>
         <packagename language="de"><![CDATA[Minecraft-Sync]]></packagename>
         <packagedescription><![CDATA[Syncs Groups between Minecraft and WSC.]]></packagedescription>
         <packagedescription language="de"><![CDATA[Synchronisiert Gruppen zwischen Minecraft und WSC.]]></packagedescription>
-        <version>0.0.1</version>
+        <version>0.0.1 dev 1</version>
         <date>2021-11-08</date>
     </packageinformation>
 
@@ -15,7 +15,7 @@
 
     <requiredpackages>
         <requiredpackage minversion="5.3.0">com.woltlab.wcf</requiredpackage>
-        <requiredpackage minversion="1.0.1" file="requirements/de.xxschrandxx.wsc.minecraft-linker.tar">de.xxschrandxx.wsc.minecraft-linker</requiredpackage>
+        <requiredpackage minversion="1.0.4" file="requirements/de.xxschrandxx.wsc.minecraft-linker.tar">de.xxschrandxx.wsc.minecraft-linker</requiredpackage>
     </requiredpackages>
 
     <excludedpackages>
@@ -30,6 +30,6 @@
         <instruction type="option"/>
         <instruction type="templateListener"/>
         <instruction type="userGroupOption"/>
-        <instruction type="script">acp/install_de.xxschrandxx.wsc.minecraft-sync.php</instruction>
+        <instruction type="database">acp/database/install_de.xxschrandxx.wsc.minecraft-sync.php</instruction>
     </instructions>
 </package>
