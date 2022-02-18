@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package name="de.xxschrandxx.wsc.minecraft-sync" xmlns="https://www.woltlab.com" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.woltlab.com https://www.woltlab.com/XSD/5.4/package.xsd">
-    <packageinformation>
-        <packagename><![CDATA[Minecraft Sync]]></packagename>
-        <packagename language="de"><![CDATA[Minecraft-Sync]]></packagename>
-        <packagedescription><![CDATA[Syncs Groups between Minecraft and WSC.]]></packagedescription>
-        <packagedescription language="de"><![CDATA[Synchronisiert Gruppen zwischen Minecraft und WSC.]]></packagedescription>
-        <version>0.0.1 dev 1</version>
-        <date>2021-11-08</date>
-    </packageinformation>
+<package name="de.xxschrandxx.wsc.minecraft-sync"
+	xmlns="https://www.woltlab.com"
+	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.woltlab.com https://www.woltlab.com/XSD/5.4/package.xsd">
+	<packageinformation>
+		<packagename><![CDATA[Minecraft Sync]]></packagename>
+		<packagename language="de"><![CDATA[Minecraft-Sync]]></packagename>
+		<packagedescription><![CDATA[Syncs Groups between Minecraft and WSC.]]></packagedescription>
+		<packagedescription language="de"><![CDATA[Synchronisiert Gruppen zwischen Minecraft und WSC.]]></packagedescription>
+		<version>0.0.1 dev 1</version>
+		<date>2021-11-08</date>
+	</packageinformation>
 
-    <authorinformation>
-        <author><![CDATA[xXSchrandXx]]></author>
-    </authorinformation>
+	<authorinformation>
+		<author><![CDATA[xXSchrandXx]]></author>
+	</authorinformation>
 
-    <requiredpackages>
-        <requiredpackage minversion="5.3.0">com.woltlab.wcf</requiredpackage>
-        <requiredpackage minversion="1.0.4" file="requirements/de.xxschrandxx.wsc.minecraft-linker.tar">de.xxschrandxx.wsc.minecraft-linker</requiredpackage>
-    </requiredpackages>
+	<requiredpackages>
+		<requiredpackage minversion="5.3.0">com.woltlab.wcf</requiredpackage>
+		<requiredpackage minversion="1.0.4" file="requirements/de.xxschrandxx.wsc.minecraft-linker.tar">de.xxschrandxx.wsc.minecraft-linker</requiredpackage>
+	</requiredpackages>
 
-    <excludedpackages>
-        <excludedpackage version="6.0.0 Alpha 1">com.woltlab.wcf</excludedpackage>
-    </excludedpackages>
+	<excludedpackages>
+		<excludedpackage version="6.0.0 Alpha 1">com.woltlab.wcf</excludedpackage>
+	</excludedpackages>
 
-    <instructions type="install">
+	<instructions type="install">
 		<instruction type="acpTemplate"/>
-        <instruction type="eventListener"/>
-        <instruction type="file"/>
-        <instruction type="language"/>
-        <instruction type="option"/>
-        <instruction type="templateListener"/>
-        <instruction type="userGroupOption"/>
-        <instruction type="database">acp/database/install_de.xxschrandxx.wsc.minecraft-sync.php</instruction>
-    </instructions>
+		<instruction type="eventListener"/>
+		<instruction type="file"/>
+		<instruction type="language"/>
+		<instruction type="option"/>
+		<instruction type="templateListener"/>
+		<instruction type="userGroupOption"/>
+		<instruction type="database">acp/database/install_de.xxschrandxx.wsc.minecraft-sync.php</instruction>
+	</instructions>
 </package>
