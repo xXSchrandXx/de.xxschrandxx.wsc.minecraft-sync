@@ -2,9 +2,7 @@
 
 namespace wcf\system\minecraft;
 
-use wcf\data\minecraft\Minecraft;
-
-interface IMinecraftSyncSingleHandler
+interface IMinecraftSyncHandler
 {
     /**
      * Konstruiert die Klasse

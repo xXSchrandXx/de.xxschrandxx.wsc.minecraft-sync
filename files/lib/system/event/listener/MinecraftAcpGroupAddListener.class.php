@@ -6,6 +6,7 @@ use wcf\acp\form\UserGroupEditForm;
 use wcf\system\background\BackgroundQueueHandler;
 use wcf\system\exception\UserInputException;
 use wcf\system\exception\SystemException;
+use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\minecraft\MinecraftSyncMultipleHandler;
 use wcf\system\WCF;
 use wcf\util\JSON;
@@ -49,7 +50,7 @@ class MinecraftAcpGroupAddListener implements IParameterizedEventListener
      */
     public function validate($eventObj)
     {
-        foreach (MinecraftSyncMultipleHandler::getInstance()->getMinecrafts() as $minecraft) {
+        foreach (MinecraftSyncHandler::getInstance()->getMinecrafts() as $minecraft) {
             // TODO
         }
     }
@@ -64,8 +65,8 @@ class MinecraftAcpGroupAddListener implements IParameterizedEventListener
         ]);
 
         /* TODO
-        if (HANASHI_TEAMSPEAK_ENABLE_BACKGROUND_JOB) {
-            BackgroundQueueHandler::getInstance()->enqueueIn(new TeamSpeakGlobalSyncBackgroundJob());
+        if (MINECRAFT_SYNC_ENABLE_BACKGROUND_JOB) {
+            BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncBackgroundJob());
         }
         */
 
@@ -88,7 +89,7 @@ class MinecraftAcpGroupAddListener implements IParameterizedEventListener
             }
         }
 
-        $minecraft = MinecraftSyncMultipleHandler::getInstance();
+        $minecraft = MinecraftSyncHandler::getInstance();
 
         // assign variables
         WCF::getTPL()->assign([
