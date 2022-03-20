@@ -2,40 +2,58 @@
 
 namespace wcf\system\minecraft;
 
+use wcf\data\user\minecraft\MinecraftUser;
+
 interface IMinecraftSyncHandler
 {
     /**
-     * Konstruiert die Klasse
+     * Gibt den status des Minecraft-Servers wieder.
+     * If a {@link GuzzleException} happens or a {@link JSON#decode($json, $asArray = true)} throws a {@link SystemException} the response will be false.
      * @param $minecraftID
-     */
-    public function __construct(int $minecraftID);
-
-    /**
-     * Gibt die Gruppen auf dem Minecraft-Server wieder.
      * @return array
      */
-    public function getGroups();
+    public function status(?int $minecraftID = null);
 
     /**
-     * Gibt die Gruppen des Spieler auf dem Minecraft-Server wieder.
+     * Gibt die Gruppen auf den Minecraft-Server(n) wieder.
+     * If a {@link GuzzleException} happens or a {@link JSON#decode($json, $asArray = true)} throws a {@link SystemException} the response will be false.
+     * @return array
+     */
+    public function groupList(?int $minecraftID = null);
+
+    /**
+     * Gibt die Gruppen des Spieler auf den Minecraft-Server(n) wieder.
+     * If a {@link GuzzleException} happens or a {@link JSON#decode($json, $asArray = true)} throws a {@link SystemException} the response will be false.
      * @param $uuid
      * @return array
      */
-    public function getPlayerGroups(string $uuid);
+    public function getUserGroups(string $uuid, ?int $minecraftID = null);
 
     /**
-     * Fügt den Spieler auf dem Minecraft-Server in die Gruppe hinzu.
-     * @param $uuid
-     * @param $group
-     * @return array
-     */
-    public function addPlayerToGroup(string $uuid, string $group);
-
-    /**
-     * Entfernt den Spieler auf dem Minecraft-Server aus der Gruppe.
+     * Fügt den Spieler auf den Minecraft-Server(n) in die Gruppe hinzu..
      * @param $uuid
      * @param $group
      * @return array
      */
-    public function removePlayerFromGroup(string $uuid, string $group);
+    public function addUserToGroup(string $uuid, string $group, ?int $minecraftID = null);
+
+    /**
+     * Entfernt den Spieler auf den Minecraft-Server(n) aus der Gruppe.
+     * @param $uuid
+     * @param $group
+     * @return array
+     */
+    public function removeUserFromGroup(string $uuid, string $group, ?int $minecraftID = null);
+
+    /**
+     * Gibt Gruppen an, welche von Minecraft-Sync synchronisiert werden sollen.
+     * @return array
+     */
+    public function getWSCGroups();
+
+    /**
+     * Synchronisiert einen MinecraftUser
+     * @param $minecraftUser
+     */
+    public function sync(MinecraftUser $minecraftUser);
 }

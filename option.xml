@@ -15,6 +15,11 @@
 				<categoryname>minecraft_sync_general</categoryname>
 				<optiontype>boolean</optiontype>
 				<defaultvalue>1</defaultvalue>
+				<enableoptions>minecraft_sync_identity</enableoptions>
+			</option>
+			<option name="minecraft_sync_identity">
+				<categoryname>minecraft_sync_general</categoryname>
+				<optiontype>MinecraftConnectionMultiSelect</optiontype>
 			</option>
 		</options>
 	</import>

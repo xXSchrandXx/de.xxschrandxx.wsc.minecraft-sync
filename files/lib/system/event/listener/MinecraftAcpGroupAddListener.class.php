@@ -4,10 +4,9 @@ namespace wcf\system\event\listener;
 
 use wcf\acp\form\UserGroupEditForm;
 use wcf\system\background\BackgroundQueueHandler;
-use wcf\system\exception\UserInputException;
+use wcf\system\background\job\MinecraftSyncBackgroundJob;
 use wcf\system\exception\SystemException;
 use wcf\system\minecraft\MinecraftSyncHandler;
-use wcf\system\minecraft\MinecraftSyncMultipleHandler;
 use wcf\system\WCF;
 use wcf\util\JSON;
 
@@ -18,17 +17,17 @@ class MinecraftAcpGroupAddListener implements IParameterizedEventListener
      *
      * @var array
      */
-    protected $minecraftGroupNames = [];
+    protected $minecraftGroups = [];
 
     /**
      * @inheritDoc
      */
     public function execute($eventObj, $className, $eventName, array &$parameters)
     {
-        if (!(MINECRAFT_SYNC_ENABLED && MINECRAFT_LINKER_ENABLED && MINECRAFT_LINKER_IDENTITY)) {
+        if (!(MINECRAFT_SYNC_ENABLED && MINECRAFT_LINKER_ENABLED && MINECRAFT_SYNC_IDENTITY)) {
             return;
         }
-        if (!WCF::getSession()->getPermission('admin.minecraftSynchronisation.canManage')) {
+        if (!WCF::getSession()->getPermission('admin.minecraftSync.canManage')) {
             return;
         }
 
@@ -41,7 +40,7 @@ class MinecraftAcpGroupAddListener implements IParameterizedEventListener
     public function readFormParameters()
     {
         if (isset($_POST['minecraftGroupNames'])) {
-            $this->minecraftGroupNames = $_POST['minecraftGroupNames'];
+            $this->minecraftGroups = $_POST['minecraftGroupNames'];
         }
     }
 
@@ -64,11 +63,9 @@ class MinecraftAcpGroupAddListener implements IParameterizedEventListener
             'minecraftGroups' => JSON::encode($this->minecraftGroups)
         ]);
 
-        /* TODO
-        if (MINECRAFT_SYNC_ENABLE_BACKGROUND_JOB) {
+        if (MINECRAFT_SYNC_ENABLED) {
             BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncBackgroundJob());
         }
-        */
 
         // // reset values
         if (!($eventObj instanceof UserGroupEditForm)) {
@@ -92,9 +89,12 @@ class MinecraftAcpGroupAddListener implements IParameterizedEventListener
         $minecraft = MinecraftSyncHandler::getInstance();
 
         // assign variables
-        WCF::getTPL()->assign([
-            'minecrafts' => $minecraft->getMinecrafts(),
-            'minecraftGroupNames' => $minecraft->getGroups()
-        ]);
+        WCF::getTPL()->assign(
+            [
+                'minecrafts' => $minecraft->getMinecrafts(),
+                'minecraftGroups' => $this->minecraftGroups,
+                'minecraftGroupNames' => $minecraft->groupList()
+            ]
+        );
     }
 }
