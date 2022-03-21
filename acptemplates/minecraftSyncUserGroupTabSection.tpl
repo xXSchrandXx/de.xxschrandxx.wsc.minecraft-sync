@@ -8,7 +8,14 @@
 		<ul class="scrollableCheckboxList" id="minecraftGroupNames-{$minecraftID}" style="height: 200px;">
 			{foreach from=$minecraftGroupNames[$minecraftID] item=minecraftGroupName}
 				<li>
-					<label><input type="checkbox" name="minecraftGroupNames[{$minecraftID}][]" value="{@$minecraftGroupName}"{if !$minecraftGroups[$minecraftID]|empty && $minecraftGroupName|in_array($minecraftGroups[$minecraftID])} checked{/if}> {$minecraftGroupName}</label>
+					<label>
+						<input type="checkbox" name="minecraftGroupNames[{$minecraftID}][]" value="{@$minecraftGroupName}"
+							{if !$minecraftGroups[$minecraftID]|empty && $minecraftGroupName|in_array($minecraftGroups[$minecraftID])}
+								checked
+							{/if}
+						>
+						{$minecraftGroupName}
+					</label>
 				</li>
 			{/foreach}
 		</ul>
@@ -27,7 +34,7 @@
 			'wcf.global.filter.visibility.highlightActive': '{jslang}wcf.global.filter.visibility.highlightActive{/jslang}',
 			'wcf.global.filter.visibility.showAll': '{jslang}wcf.global.filter.visibility.showAll{/jslang}'
 		});
-		
+
 		new UiItemListFilter('minecraftGroupNames-{$minecraftID|encodeJS}');
 	});
 </script>

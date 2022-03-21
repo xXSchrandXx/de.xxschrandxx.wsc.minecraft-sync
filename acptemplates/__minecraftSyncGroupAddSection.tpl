@@ -14,7 +14,8 @@
 						</ul>
 					</nav>
 					{foreach from=$minecrafts item=minecraft}
-						<div id="minecraft-sync-{$minecraft->minecraftID}" class="tabMenuContent hidden" data-name="minecraft-sync-{$minecraft->minecraftID}">
+						<div id="minecraft-sync-{$minecraft->minecraftID}" class="tabMenuContent hidden"
+							data-name="minecraft-sync-{$minecraft->minecraftID}">
 							<div class="section">
 								{include file='minecraftSyncUserGroupTabSection' minecraftID=$minecraft->minecraftID}
 							</div>
@@ -25,4 +26,4 @@
 		{else}
 			<p class="info">{lang}wcf.global.noItems{/lang}</p>
 		{/if}
-	</section>
+</section>
