@@ -16,7 +16,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     /**
      * Baut die Klasse auf
      */
-    public function init()
+    public function init(): void
     {
         if (MINECRAFT_SYNC_IDENTITY) {
             $this->minecraftIDs = explode("\n", StringUtil::unifyNewlines(MINECRAFT_SYNC_IDENTITY));
@@ -226,6 +226,13 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 
         // 7. Benutzergruppen vom Minecraft-Server filtern.
         // TODO
+        wcfDebug($wscGroups);
+        $minecraftHasGroupsFiltered = [];
+        foreach ($minecraftHasGroups as $minecraftID => $hasGroups) {
+            if ($wscGroups) {
+                
+            }
+        }
 
         // 8. Gruppen müssen hinzugefügt werden
         $needToAdd = [];
