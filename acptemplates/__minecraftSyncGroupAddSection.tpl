@@ -1,3 +1,4 @@
+{if MINECRAFT_SYNC_ENABLED && MINECRAFT_SYNC_IDENTITY}
 	<section class="section">
 		<h2 class="sectionTitle">{lang}wcf.page.groupAddSection.minecraftSync.sectionTitle{/lang}</h2>
 
@@ -26,4 +27,5 @@
 		{else}
 			<p class="info">{lang}wcf.global.noItems{/lang}</p>
 		{/if}
-</section>
+	</section>
+{/if}

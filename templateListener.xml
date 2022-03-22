@@ -11,9 +11,9 @@
 		</templatelistener>
 		<templatelistener name="userAddButton">
 			<environment>admin</environment>
-			<templatename>userAdd</templatename>
-			<eventname>addMinecraftButtons</eventname>
-			<templatecode><![CDATA[{include file='__minecraftSyncUserAddButtons'}]]></templatecode>
+			<templatename>__minecraftUserAddSection</templatename>
+			<eventname>rowButtons</eventname>
+			<templatecode><![CDATA[{include file='minecraftSyncUserAddButtons'}]]></templatecode>
 		</templatelistener>
 		<!-- /admin -->
 	</import>

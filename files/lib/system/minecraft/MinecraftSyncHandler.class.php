@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\GuzzleException;
 use wcf\data\user\group\UserGroupList;
 use wcf\data\user\minecraft\MinecraftUser;
 use wcf\data\user\User;
+use wcf\system\exception\MinecraftException;
 use wcf\system\exception\SystemException;
 use wcf\util\JSON;
 use wcf\util\StringUtil;
@@ -39,7 +40,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 /** @var \Psr\Http\Message\ResponseInterface */
                 $response = $this->call($minecraftID, 'GET', 'permission/status');
                 return JSON::decode($response->getBody());
-            } catch (GuzzleException | SystemException $e) {
+            } catch (GuzzleException | SystemException | MinecraftException $e) {
                 if (ENABLE_DEBUG_MODE) {
                     \wcf\functions\exception\logThrowable($e);
                 }
@@ -65,7 +66,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 $response = $this->call($minecraftID, 'GET', 'permission/groupList');
                 $responseBody = JSON::decode($response->getBody());
                 return $responseBody['groups'];
-            } catch (GuzzleException | SystemException $e) {
+            } catch (GuzzleException | SystemException | MinecraftException $e) {
                 if (ENABLE_DEBUG_MODE) {
                     \wcf\functions\exception\logThrowable($e);
                 }
@@ -93,7 +94,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 ]);
                 $responseBody = JSON::decode($response->getBody());
                 return $responseBody['groups'];
-            } catch (GuzzleException | SystemException $e) {
+            } catch (GuzzleException | SystemException | MinecraftException $e) {
                 if (ENABLE_DEBUG_MODE) {
                     \wcf\functions\exception\logThrowable($e);
                 }
@@ -121,7 +122,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                     'group' => $group
                 ]);
                 return JSON::decode($response->getBody());
-            } catch (GuzzleException | SystemException $e) {
+            } catch (GuzzleException | SystemException | MinecraftException $e) {
                 if (ENABLE_DEBUG_MODE) {
                     \wcf\functions\exception\logThrowable($e);
                 }
@@ -152,7 +153,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                     'group' => $group
                 ]);
                 return JSON::decode($response->getBody());
-            } catch (GuzzleException | SystemException $e) {
+            } catch (GuzzleException | SystemException | MinecraftException $e) {
                 if (ENABLE_DEBUG_MODE) {
                     \wcf\functions\exception\logThrowable($e);
                 }
@@ -181,11 +182,10 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 
         foreach ($wscGroupList as $userGroup) {
             try {
-                $this->wscGroups[$userGroup->groupID] = JSON::decode($userGroup->minecraftGroups);
+                $this->wscGroups[$userGroup->groupID] = JSON::decode($userGroup->minecraftGroups)[1];
             } catch (SystemException $e) {
             }
         }
-        wcfDebug($this->wscGroups);
 
         return $this->wscGroups;
     }
@@ -207,39 +207,50 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 
         // 4. Auflisten welche Gruppen der Benutzer haben sollte
         $shouldHave = [];
-        foreach ($wscGroups as $wscGroup) {
-            if (in_array($wscGroup->groupID, $userGroupIDs)) {
-                $shouldHave[$wscGroup->groupID] = $wscGroup->minecraftGroups;
+        foreach ($wscGroups as $groupID => $wscGroup) {
+            if (in_array($groupID, $userGroupIDs)) {
+                $shouldHave[$groupID] = $wscGroup;
             }
         }
 
         // 5. Auflisten welche Gruppen der Benutzer nicht haben sollte
         $shouldNotHave = [];
-        foreach ($wscGroups as $wscGroup) {
-            if (!in_array($wscGroup->groupID, $userGroupIDs)) {
-                $shouldNotHave[$wscGroup->groupID] = $wscGroup->minecraftGroups;
+        foreach ($wscGroups as $groupID => $wscGroup) {
+            if (!in_array($groupID, $userGroupIDs)) {
+                $shouldNotHave[$groupID] = $wscGroup;
             }
         }
 
         // 6. Benutzergruppen von Minecraft-Servern erhalten
-        $minecraftGroups = $this->getUserGroups($uuid);
+        $minecraftHasGroups = $this->getUserGroups($uuid);
 
-        // 7. Gruppen müssen hinzugefügt werden
+        // 7. Benutzergruppen vom Minecraft-Server filtern.
+        // TODO
+
+        // 8. Gruppen müssen hinzugefügt werden
         $needToAdd = [];
-        foreach ($minecraftGroups as $minecraftID => $hasGroups) {
+        foreach ($minecraftHasGroups as $minecraftID => $hasGroups) {
             foreach ($hasGroups as $hasGroup) {
                 if (!in_array($hasGroup, $shouldHave)) {
-                    \array_push($needToAdd[$minecraftID], $hasGroup);
+                    if (isset($needToAdd[$minecraftID])) {
+                        \array_push($needToAdd[$minecraftID], $hasGroup);
+                    } else {
+                        $needToAdd[$minecraftID] = [$hasGroup];
+                    }
                 }
             }
         }
 
-        // 8. Gruppen müssen entfernt werden
+        // 9. Gruppen müssen entfernt werden
         $needToRemove = [];
-        foreach ($minecraftGroups as $minecraftID => $hasGroups) {
+        foreach ($minecraftHasGroups as $minecraftID => $hasGroups) {
             foreach ($hasGroups as $hasGroup) {
                 if (in_array($hasGroup, $shouldNotHave)) {
-                    \array_push($needToRemove[$minecraftID], $hasGroup);
+                    if (isset($needToRemove[$minecraftID])) {
+                        \array_push($needToRemove[$minecraftID], $hasGroup);
+                    } else {
+                        $needToRemove[$minecraftID] = [$hasGroup];
+                    }
                 }
             }
         }
