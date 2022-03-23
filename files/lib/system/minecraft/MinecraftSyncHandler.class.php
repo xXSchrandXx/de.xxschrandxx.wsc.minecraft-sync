@@ -44,7 +44,10 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 if (ENABLE_DEBUG_MODE) {
                     \wcf\functions\exception\logThrowable($e);
                 }
-                return false;
+                return [
+                    'status' => $e->getMessage(),
+                    'statusCode' => $e->getCode()
+                ];
             }
         }
     }
@@ -70,7 +73,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 if (ENABLE_DEBUG_MODE) {
                     \wcf\functions\exception\logThrowable($e);
                 }
-                return false;
+                return [];
             }
         }
     }
@@ -221,28 +224,53 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
         }
 
+//        wcfDebug($shouldHave, $shouldNotHave);
+
         // 6. Benutzergruppen von Minecraft-Servern erhalten
         $minecraftHasGroups = $this->getUserGroups($uuid);
 
         // 7. Benutzergruppen vom Minecraft-Server filtern.
-        // TODO
-        wcfDebug($wscGroups);
         $minecraftHasGroupsFiltered = [];
         foreach ($minecraftHasGroups as $minecraftID => $hasGroups) {
-            if ($wscGroups) {
-                
+            if (!$hasGroups) {
+                if (ENABLE_DEBUG_MODE) {
+                    throw new MinecraftException("Could not get groups on server with id " . $minecraftID);
+                }
+                continue;
+            }
+            foreach ($wscGroups as $groupID => $groups) {
+                foreach ($groups as $group) {
+                    if (in_array($group, $hasGroups)) {
+                        if (isset($minecraftHasGroupsFiltered[$minecraftID])) {
+                            \array_push($minecraftHasGroupsFiltered[$minecraftID], $group);
+                        } else {
+                            $minecraftHasGroupsFiltered[$minecraftID] = [$group];
+                        }
+                    }
+                }
             }
         }
 
+//        wcfDebug($minecraftHasGroups, $minecraftHasGroupsFiltered);
+
         // 8. Gruppen müssen hinzugefügt werden
         $needToAdd = [];
-        foreach ($minecraftHasGroups as $minecraftID => $hasGroups) {
-            foreach ($hasGroups as $hasGroup) {
-                if (!in_array($hasGroup, $shouldHave)) {
-                    if (isset($needToAdd[$minecraftID])) {
-                        \array_push($needToAdd[$minecraftID], $hasGroup);
-                    } else {
-                        $needToAdd[$minecraftID] = [$hasGroup];
+        foreach ($shouldHave as $shouldHaveGroups) {
+            foreach ($shouldHaveGroups as $shouldHaveGroup) {
+                foreach ($this->minecraftIDs as $minecraftID) {
+                    $add = false;
+                    if (!array_key_exists($minecraftID, $minecraftHasGroupsFiltered)) {
+                        $add = true;
+                    }
+                    else if (!in_array($shouldHaveGroup, $minecraftHasGroupsFiltered[$minecraftID])) {
+                        $add = true;
+                    }
+                    if ($add) {
+                        if (isset($needToAdd[$minecraftID])) {
+                            \array_push($needToAdd[$minecraftID], $shouldHaveGroup);
+                        } else {
+                            $needToAdd[$minecraftID] = [$shouldHaveGroup];
+                        }
                     }
                 }
             }
@@ -250,32 +278,51 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 
         // 9. Gruppen müssen entfernt werden
         $needToRemove = [];
-        foreach ($minecraftHasGroups as $minecraftID => $hasGroups) {
+        foreach ($minecraftHasGroupsFiltered as $minecraftID => $hasGroups) {
             foreach ($hasGroups as $hasGroup) {
-                if (in_array($hasGroup, $shouldNotHave)) {
-                    if (isset($needToRemove[$minecraftID])) {
-                        \array_push($needToRemove[$minecraftID], $hasGroup);
-                    } else {
-                        $needToRemove[$minecraftID] = [$hasGroup];
+                foreach ($shouldNotHave as $shouldNotHaveGroups) {
+                    if (in_array($hasGroup, $shouldNotHaveGroups)) {
+                        if (isset($needToRemove[$minecraftID])) {
+                            \array_push($needToRemove[$minecraftID], $hasGroup);
+                        } else {
+                            $needToRemove[$minecraftID] = [$hasGroup];
+                        }
                     }
                 }
             }
         }
 
-        wcfDebug($needToAdd, $needToRemove);
+//        wcfDebug($needToAdd, $needToRemove);
+
+        $response = [
+            'added' => [],
+            'removed' => []
+        ];
 
         // TODO Add Groups
         foreach ($needToAdd as $minecraftID => $groups) {
             foreach ($groups as $group) {
-                $this->addUserToGroup($minecraftID, $uuid, $group);
+                if (array_key_exists($minecraftID, $response['added'])) {
+                    $response['added'][$minecraftID] += $this->addUserToGroup($uuid, $group, $minecraftID);
+                } else {
+                    $response['added'][$minecraftID] = [$this->addUserToGroup($uuid, $group, $minecraftID)];
+                }
             }
         }
 
         // TODO Remove Groups
         foreach ($needToRemove as $minecraftID => $groups) {
             foreach ($groups as $group) {
-                $this->removeUserFromGroup($minecraftID, $uuid, $group);
+                if (array_key_exists($minecraftID, $response['removed'])) {
+                    $response['removed'][$minecraftID] += $this->removeUserFromGroup($uuid, $group, $minecraftID);
+                } else {
+                    $response['removed'][$minecraftID] = [$this->removeUserFromGroup($uuid, $group, $minecraftID)];
+                }
             }
         }
+
+//        wcfDebug($response);
+
+        return $response;
     }
 }
