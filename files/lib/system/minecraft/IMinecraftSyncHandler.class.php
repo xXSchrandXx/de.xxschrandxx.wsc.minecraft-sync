@@ -25,9 +25,14 @@ interface IMinecraftSyncHandler
      * Gibt die Gruppen des Spieler auf den Minecraft-Server(n) wieder.
      * If a {@link GuzzleException} happens or a {@link JSON#decode($json, $asArray = true)} throws a {@link SystemException} the response will be false.
      * @param $uuid
-     * @return array
+     * @return array|false
      */
     public function getUserGroups(string $uuid, ?int $minecraftID = null);
+
+    /**
+     * TODO
+     */
+    public function getUsersGroups(array $map, ?int $minecraftID = null);
 
     /**
      * Fügt den Spieler auf den Minecraft-Server(n) in die Gruppe hinzu..
@@ -38,12 +43,22 @@ interface IMinecraftSyncHandler
     public function addUserToGroup(string $uuid, string $group, ?int $minecraftID = null);
 
     /**
+     * TODO
+     */
+    public function addUsersToGroups(array $map, ?int $minecraftID = null);
+
+    /**
      * Entfernt den Spieler auf den Minecraft-Server(n) aus der Gruppe.
      * @param $uuid
      * @param $group
      * @return array
      */
     public function removeUserFromGroup(string $uuid, string $group, ?int $minecraftID = null);
+
+    /**
+     * TODO
+     */
+    public function removeUsersFromGroups(array $map, ?int $minecraftID = null);
 
     /**
      * Gibt Gruppen an, welche von Minecraft-Sync synchronisiert werden sollen.
@@ -56,4 +71,9 @@ interface IMinecraftSyncHandler
      * @param $minecraftUser
      */
     public function sync(MinecraftUser $minecraftUser);
+
+    /**
+     * TODO
+     */
+    public function syncMultiple(array $minecraftUsers);
 }
