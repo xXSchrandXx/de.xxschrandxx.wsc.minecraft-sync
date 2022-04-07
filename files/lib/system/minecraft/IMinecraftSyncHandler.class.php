@@ -25,25 +25,33 @@ interface IMinecraftSyncHandler
      * Gibt die Gruppen des Spieler auf den Minecraft-Server(n) wieder.
      * If a {@link GuzzleException} happens or a {@link JSON#decode($json, $asArray = true)} throws a {@link SystemException} the response will be false.
      * @param $uuid
+     * @param $minecraftID
      * @return array|false
      */
     public function getUserGroups(string $uuid, ?int $minecraftID = null);
 
     /**
-     * TODO
+     * Gibt alle Gruppen aller Spieler auf den Minecraft-Server(n) wieder.
+     * @param $map
+     * @param $minecraftID
+     * @return array
      */
     public function getUsersGroups(array $map, ?int $minecraftID = null);
 
     /**
-     * Fügt den Spieler auf den Minecraft-Server(n) in die Gruppe hinzu..
+     * Fügt den Spieler auf den Minecraft-Server(n) in die Gruppe hinzu.
      * @param $uuid
      * @param $group
+     * @param $minecraftID
      * @return array
      */
     public function addUserToGroup(string $uuid, string $group, ?int $minecraftID = null);
 
     /**
-     * TODO
+     * Fügt alle Spieler auf den Minecraft-Server(n) in die Gruppen hinzu.
+     * @param $map
+     * @param $minecraftID
+     * @return array
      */
     public function addUsersToGroups(array $map, ?int $minecraftID = null);
 
@@ -51,12 +59,16 @@ interface IMinecraftSyncHandler
      * Entfernt den Spieler auf den Minecraft-Server(n) aus der Gruppe.
      * @param $uuid
      * @param $group
+     * @param $minecraftID
      * @return array
      */
     public function removeUserFromGroup(string $uuid, string $group, ?int $minecraftID = null);
 
     /**
-     * TODO
+     * Entfernt alle Spieler auf den Minecraft-Server(n) aus den Gruppen.
+     * @param $map
+     * @param $minecraftID
+     * @return array
      */
     public function removeUsersFromGroups(array $map, ?int $minecraftID = null);
 
@@ -73,7 +85,14 @@ interface IMinecraftSyncHandler
     public function sync(MinecraftUser $minecraftUser);
 
     /**
-     * TODO
+     * Syncronisiert alle MinecraftUser des User mit der gegebenen ID.
+     * @param $userID
+     * @return array
+     */
+    public function syncUser(int $userID);
+
+    /**
+     * Synchronisiert alle MinecraftUser
      */
     public function syncAll();
 }
