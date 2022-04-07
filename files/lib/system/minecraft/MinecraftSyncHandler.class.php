@@ -326,10 +326,11 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         $wscGroupList = new UserGroupList();
         $wscGroupList->getConditionBuilder()->add('minecraftGroups IS NOT NULL');
         $wscGroupList->readObjects();
+        $wscGroups = $wscGroupList->getObjects();
 
-        foreach ($wscGroupList as $userGroup) {
+        foreach ($wscGroups as $wscGroup) {
             try {
-                $this->wscGroups[$userGroup->groupID] = JSON::decode($userGroup->minecraftGroups)[1];
+                $this->wscGroups[$wscGroup->groupID] = JSON::decode($wscGroup->minecraftGroups);
             } catch (SystemException $e) {
             }
         }
@@ -372,17 +373,21 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 
         // 4. Auflisten welche Gruppen der Benutzer haben sollte
         $shouldHave = [];
-        foreach ($wscGroups as $groupID => $wscGroup) {
-            if (in_array($groupID, $userGroupIDs)) {
-                $shouldHave[$groupID] = $wscGroup;
+        foreach ($wscGroups as $groupID => $wscGroupInfo) {
+            foreach ($wscGroupInfo as $minecraftID => $wscGroup) {
+                if (in_array($groupID, $userGroupIDs)) {
+                    $shouldHave[$groupID] = $wscGroup;
+                }
             }
         }
 
         // 5. Auflisten welche Gruppen der Benutzer nicht haben sollte
         $shouldNotHave = [];
-        foreach ($wscGroups as $groupID => $wscGroup) {
-            if (!in_array($groupID, $userGroupIDs)) {
-                $shouldNotHave[$groupID] = $wscGroup;
+        foreach ($wscGroups as $groupID => $wscGroupInfo) {
+            foreach ($wscGroupInfo as $minecraftID => $wscGroup) {
+                if (!in_array($groupID, $userGroupIDs)) {
+                    $shouldNotHave[$groupID] = $wscGroup;
+                }
             }
         }
 
@@ -398,13 +403,18 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 }
                 continue;
             }
-            foreach ($wscGroups as $groupID => $groups) {
-                foreach ($groups as $group) {
-                    if (in_array($group, $hasGroups)) {
-                        if (isset($minecraftHasGroupsFiltered[$minecraftID])) {
-                            \array_push($minecraftHasGroupsFiltered[$minecraftID], $group);
-                        } else {
-                            $minecraftHasGroupsFiltered[$minecraftID] = [$group];
+            foreach ($wscGroups as $groupID => $wscGroupInfo) {
+                foreach ($wscGroupInfo as $minecraftID2 => $groups) {
+                    if ($minecraftID != $minecraftID2) {
+                        continue;
+                    }
+                    foreach ($groups as $group) {
+                        if (in_array($group, $hasGroups)) {
+                            if (isset($minecraftHasGroupsFiltered[$minecraftID])) {
+                                \array_push($minecraftHasGroupsFiltered[$minecraftID], $group);
+                            } else {
+                                $minecraftHasGroupsFiltered[$minecraftID] = [$group];
+                            }
                         }
                     }
                 }
@@ -486,7 +496,6 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     {
         // 1. UUID & User
         $uuid = $minecraftUser->minecraftUUID;
-        $user = new User($minecraftUser->userID);
 
         // 2. Benutzergruppen vom WSC erhalten
         $wscGroups = $this->getWSCGroups();

@@ -1,6 +1,7 @@
 import { DatabaseObjectActionResponse } from "WoltLabSuite/Core/Ajax/Data";
 import * as Ajax from "WoltLabSuite/Core/Ajax";
 import * as UiDialog from "WoltLabSuite/Core/Ui/Dialog";
+import * as Language from "WoltLabSuite/Core/Language";
 import { setTitle } from "WoltLabSuite/Core/Ui/Dialog";
 
 export class MinecraftSync {
@@ -23,21 +24,20 @@ export class MinecraftSync {
                 return {
                     data: {
                         actionName: "sync",
-                        className: "wcf\\data\\user\\minecraft\\MinecraftSyncAction",
-                        objectIDs: [objectID]
+                        className: "wcf\\data\\minecraft\\user\\MinecraftSyncAction",
+                        objectIDs: [objectID],
                     }
                 };
             },
             _ajaxSuccess: (data: DatabaseObjectActionResponse) => {
-                console.log("Received response", data);
                 UiDialog.open({
                     _dialogSetup: () => {
                         return {
-                            id: "string",
+                            id: 'minecraftSyncDialog',
                             source: null,
                             options: {
                                 onShow: function(): void {
-                                    setTitle("string", "Result");
+                                    setTitle('minecraftSyncDialog', Language.get('wcf.page.userAddSection.minecraft.button.status.result'));
                                 }
                             }
                         }

@@ -28,10 +28,9 @@ class MinecraftSyncAction extends MinecraftUserAction
     public function sync()
     {
         $response = [];
-        $handler = MinecraftSyncHandler::getInstance();
         foreach ($this->getObjectIDs() as $objectID) {
             $minecraftUser = new MinecraftUser($objectID);
-            $response[$objectID] = JSON::encode($handler->sync($minecraftUser));
+            $response[$objectID] = JSON::encode(MinecraftSyncHandler::getInstance()->sync($minecraftUser));
         }
         return $response;
     }

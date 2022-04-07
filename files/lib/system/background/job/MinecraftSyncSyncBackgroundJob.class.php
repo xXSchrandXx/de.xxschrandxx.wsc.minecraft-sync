@@ -7,7 +7,7 @@ use wcf\system\minecraft\MinecraftSyncHandler;
 
 class MinecraftSyncSyncBackgroundJob extends AbstractBackgroundJob
 {
-    protected int $userID;
+    protected ?int $userID;
 
     public function __construct(?int $userID = null)
     {

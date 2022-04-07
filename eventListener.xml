@@ -12,7 +12,7 @@
 		<eventlistener name="minecraftUserModify">
 			<eventclassname>wcf\data\user\minecraft\MinecraftAction</eventclassname>
 			<eventname>finalizeAction</eventname>
-			<listenerclassname>wcf\system\event\listener\MinecraftLinkerListener</listenerclassname>
+			<listenerclassname>wcf\system\event\listener\MinecraftSyncMinecraftLinkerListener</listenerclassname>
 		</eventlistener>
 	</import>
 </data>

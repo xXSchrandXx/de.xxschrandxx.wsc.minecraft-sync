@@ -6,7 +6,7 @@ use wcf\system\background\BackgroundQueueHandler;
 use wcf\system\background\job\MinecraftSyncDeleteBackgroundJob;
 use wcf\system\background\job\MinecraftSyncSyncBackgroundJob;
 
-class MinecraftLinkerListener implements IParameterizedEventListener
+class MinecraftSyncMinecraftLinkerListener implements IParameterizedEventListener
 {
     /**
      * @inheritDoc

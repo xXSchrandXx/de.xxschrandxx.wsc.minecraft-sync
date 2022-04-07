@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language xmlns="http://www.woltlab.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/5.4/language.xsd" languagecode="en">
+	<category name="wcf.acp.group">
+		<item name="wcf.acp.group.option.admin.minecraftSync.canManage"><![CDATA[Can manage Minecraft sync]]></item>
+	</category>
+	<category name="wcf.acp.option">
+		<item name="wcf.acp.option.category.minecraft_sync"><![CDATA[Minecraft-Sync]]></item>
+		<item name="wcf.acp.option.category.minecraft_sync_general"><![CDATA[General Settings]]></item>
+		<item name="wcf.acp.option.category.minecraft_linker_password"><![CDATA[Authentication]]></item>
+		<item name="wcf.acp.option.minecraft_sync_enabled"><![CDATA[Activated]]></item>
+		<item name="wcf.acp.option.minecraft_sync_identity"><![CDATA[Server]]></item>
+		<item name="wcf.acp.option.minecraft_linker_password_enabled"><![CDATA[Activated]]></item>
+		<item name="wcf.acp.option.minecraft_linker_password_key"><![CDATA[Key]]></item>
+	</category>
+	<category name="wcf.page.groupAddSection">
+		<item name="wcf.page.groupAddSection.minecraftSync.minecraftGroupNames"><![CDATA[Groups]]></item>
+		<item name="wcf.page.groupAddSection.minecraftSync.minecraftGroupName.description"><![CDATA[Selected groups are synchronized on the server.]]></item>
+		<item name="wcf.page.groupAddSection.minecraftSync.sectionTitle"><![CDATA[Minecraft-Sync]]></item>
+	</category>
+	<category name="wcf.page.minecraftSyncUserAdd">
+		<item name="wcf.page.minecraftSyncUserAdd.button.status"><![CDATA[Status]]></item>
+	</category>
+</language>
