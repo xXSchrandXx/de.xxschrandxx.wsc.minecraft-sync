@@ -75,5 +75,5 @@ interface IMinecraftSyncHandler
     /**
      * TODO
      */
-    public function syncMultiple(array $minecraftUsers);
+    public function syncAll();
 }
