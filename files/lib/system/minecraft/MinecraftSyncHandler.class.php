@@ -482,6 +482,58 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     /**
      * @inheritDoc
      */
+    public function delete(MinecraftUser $minecraftUser)
+    {
+        // 1. UUID & User
+        $uuid = $minecraftUser->minecraftUUID;
+        $user = new User($minecraftUser->userID);
+
+        // 2. Benutzergruppen vom WSC erhalten
+        $wscGroups = $this->getWSCGroups();
+
+        // 3. Benutzergruppen von Minecraft-Servern erhalten
+        $minecraftHasGroups = $this->getUserGroups($uuid);
+
+        // 4. Benutzergruppen vom Minecraft-Server filtern.
+        $minecraftHasGroupsFiltered = [];
+        foreach ($minecraftHasGroups as $minecraftID => $hasGroups) {
+            if (!$hasGroups) {
+                if (ENABLE_DEBUG_MODE) {
+                    \wcf\functions\exception\logThrowable(new MinecraftException("Could not get groups on server with id " . $minecraftID));
+                }
+                continue;
+            }
+            foreach ($wscGroups as $groupID => $groups) {
+                foreach ($groups as $group) {
+                    if (in_array($group, $hasGroups)) {
+                        if (isset($minecraftHasGroupsFiltered[$minecraftID])) {
+                            \array_push($minecraftHasGroupsFiltered[$minecraftID], $group);
+                        } else {
+                            $minecraftHasGroupsFiltered[$minecraftID] = [$group];
+                        }
+                    }
+                }
+            }
+        }
+
+        // 5. Gruppen entfernen
+        $response = [];
+        foreach ($minecraftHasGroupsFiltered as $minecraftID => $groups) {
+            foreach ($groups as $group) {
+                if (array_key_exists($minecraftID, $response)) {
+                    $response[$minecraftID] += $this->removeUserFromGroup($uuid, $group, $minecraftID);
+                } else {
+                    $response[$minecraftID] = [$this->removeUserFromGroup($uuid, $group, $minecraftID)];
+                }
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function syncAll()
     {
 

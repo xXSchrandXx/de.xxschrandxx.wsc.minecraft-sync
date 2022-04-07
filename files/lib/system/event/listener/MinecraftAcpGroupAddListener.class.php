@@ -4,7 +4,7 @@ namespace wcf\system\event\listener;
 
 use wcf\acp\form\UserGroupEditForm;
 use wcf\system\background\BackgroundQueueHandler;
-use wcf\system\background\job\MinecraftSyncBackgroundJob;
+use wcf\system\background\job\MinecraftSyncSyncBackgroundJob;
 use wcf\system\exception\SystemException;
 use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
@@ -64,7 +64,7 @@ class MinecraftAcpGroupAddListener implements IParameterizedEventListener
         ]);
 
         if (MINECRAFT_SYNC_ENABLED) {
-            BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncBackgroundJob());
+            BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob());
         }
 
         // // reset values

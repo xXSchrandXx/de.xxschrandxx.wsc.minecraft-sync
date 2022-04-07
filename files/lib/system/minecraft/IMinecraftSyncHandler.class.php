@@ -85,6 +85,12 @@ interface IMinecraftSyncHandler
     public function sync(MinecraftUser $minecraftUser);
 
     /**
+     * Entfernt einen MinecraftUser.
+     * @param $minecraftUser
+     */
+    public function delete(MinecraftUser $minecraftUser);
+
+    /**
      * Syncronisiert alle MinecraftUser des User mit der gegebenen ID.
      * @param $userID
      * @return array

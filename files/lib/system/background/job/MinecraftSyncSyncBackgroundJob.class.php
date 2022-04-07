@@ -5,7 +5,7 @@ namespace wcf\system\background\job;
 use wcf\system\background\job\AbstractBackgroundJob;
 use wcf\system\minecraft\MinecraftSyncHandler;
 
-class MinecraftSyncBackgroundJob extends AbstractBackgroundJob
+class MinecraftSyncSyncBackgroundJob extends AbstractBackgroundJob
 {
     protected int $userID;
 

@@ -9,12 +9,10 @@
 			<inherit>1</inherit>
 			<listenerclassname>wcf\system\event\listener\MinecraftAcpGroupAddListener</listenerclassname>
 		</eventlistener>
-		<!-- TODO
-		<eventlistener name="minecraftUserGroupModify">
+		<eventlistener name="minecraftUserModify">
 			<eventclassname>wcf\data\user\minecraft\MinecraftAction</eventclassname>
 			<eventname>finalizeAction</eventname>
-			<listenerclassname>wcf\system\event\listener\???</listenerclassname>
+			<listenerclassname>wcf\system\event\listener\MinecraftLinkerListener</listenerclassname>
 		</eventlistener>
-		-->
 	</import>
 </data>
