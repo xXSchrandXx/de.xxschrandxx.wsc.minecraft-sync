@@ -401,8 +401,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                     $add = false;
                     if (!array_key_exists($minecraftID, $minecraftHasGroupsFiltered)) {
                         $add = true;
-                    }
-                    else if (!in_array($shouldHaveGroup, $minecraftHasGroupsFiltered[$minecraftID])) {
+                    } else if (!in_array($shouldHaveGroup, $minecraftHasGroupsFiltered[$minecraftID])) {
                         $add = true;
                     }
                     if ($add) {
@@ -465,7 +464,8 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     /**
      * @inheritDoc
      */
-    public function syncAll() {
+    public function syncAll()
+    {
 
         $minecraftUserList = new MinecraftUserList();
         $minecraftUserList->readObjects();
@@ -577,7 +577,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         foreach ($minecraftHasGroupsFiltered as $minecraftID => $uuids) {
             foreach ($uuids as $uuid => $hasGroups) {
                 foreach ($hasGroups as $hasGroup) {
-                    foreach ($usersShouldNotHave as $userID  => $shouldNotHave) {
+                    foreach ($usersShouldNotHave as $userID => $shouldNotHave) {
                         foreach ($shouldNotHave as $shouldNotHaveGroups) {
                             if (in_array($hasGroup, $shouldNotHaveGroups)) {
                                 if (isset($needToRemove[$minecraftID][$uuid])) {
@@ -610,7 +610,8 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         return $response;
     }
 
-    private function getLaterJsonSize(array $array) {
+    private function getLaterJsonSize(array $array)
+    {
         return strlen(JSON::encode($array));
     }
 }

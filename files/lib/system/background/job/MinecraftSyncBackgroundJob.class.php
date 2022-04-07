@@ -28,7 +28,7 @@ class MinecraftSyncBackgroundJob extends AbstractBackgroundJob
     public function perform()
     {
         if (MINECRAFT_SYNC_ENABLED) {
-// TODO            MinecraftSyncHandler::getInstance()->syncAll();
+            MinecraftSyncHandler::getInstance()->syncAll();
         }
     }
 }
