@@ -37,7 +37,7 @@ export class MinecraftSync {
                             source: null,
                             options: {
                                 onShow: function(): void {
-                                    setTitle('minecraftSyncDialog', Language.get('wcf.page.userAddSection.minecraft.button.status.result'));
+                                    setTitle('minecraftSyncDialog', Language.get('wcf.page.minecraftSyncUserAdd.button.status.result'));
                                 }
                             }
                         }
