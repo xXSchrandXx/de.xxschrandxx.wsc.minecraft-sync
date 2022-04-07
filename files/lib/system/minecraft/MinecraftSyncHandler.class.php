@@ -512,13 +512,18 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 }
                 continue;
             }
-            foreach ($wscGroups as $groupID => $groups) {
-                foreach ($groups as $group) {
-                    if (in_array($group, $hasGroups)) {
-                        if (isset($minecraftHasGroupsFiltered[$minecraftID])) {
-                            \array_push($minecraftHasGroupsFiltered[$minecraftID], $group);
-                        } else {
-                            $minecraftHasGroupsFiltered[$minecraftID] = [$group];
+            foreach ($wscGroups as $groupID => $wscGroupInfo) {
+                foreach ($wscGroupInfo as $minecraftID2 => $groups) {
+                    if ($minecraftID != $minecraftID2) {
+                        continue;
+                    }
+                    foreach ($groups as $group) {
+                        if (in_array($group, $hasGroups)) {
+                            if (isset($minecraftHasGroupsFiltered[$minecraftID])) {
+                                \array_push($minecraftHasGroupsFiltered[$minecraftID], $group);
+                            } else {
+                                $minecraftHasGroupsFiltered[$minecraftID] = [$group];
+                            }
                         }
                     }
                 }
@@ -577,9 +582,11 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         // 4. Auflisten welche Gruppen der Benutzer haben sollte
         $usersShouldHave = [];
         foreach ($userIDs as $userID => $uuids) {
-            foreach ($wscGroups as $groupID => $wscGroup) {
-                if (in_array($groupID, $usersGroupIDs[$userID])) {
-                    $usersShouldHave[$userID][$groupID] = $wscGroup;
+            foreach ($wscGroups as $groupID => $wscGroupInfo) {
+                foreach ($wscGroupInfo as $minecraftID => $wscGroup) {
+                    if (in_array($groupID, $usersGroupIDs[$userID])) {
+                        $usersShouldHave[$userID][$groupID] = $wscGroup;
+                    }
                 }
             }
         }
@@ -587,9 +594,11 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         // 5. Auflisten welche Gruppen der Benutzer nicht haben sollte
         $usersShouldNotHave = [];
         foreach ($userIDs as $userID => $uuids) {
-            foreach ($wscGroups as $groupID => $wscGroup) {
-                if (!in_array($groupID, $usersGroupIDs[$userID])) {
-                    $usersShouldNotHave[$userID][$groupID] = $wscGroup;
+            foreach ($wscGroups as $groupID => $wscGroupInfo) {
+                foreach ($wscGroupInfo as $minecraftID => $wscGroup) {
+                    if (!in_array($groupID, $usersGroupIDs[$userID])) {
+                        $usersShouldNotHave[$userID][$groupID] = $wscGroup;
+                    }
                 }
             }
         }
@@ -613,13 +622,18 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                     continue;
                 }
                 $hasGroups = $b['groups'];
-                foreach ($wscGroups as $groupID => $groups) {
-                    foreach ($groups as $group) {
-                        if (in_array($group, $hasGroups)) {
-                            if (isset($minecraftHasGroupsFiltered[$minecraftID][$uuid])) {
-                                \array_push($minecraftHasGroupsFiltered[$minecraftID][$uuid], $group);
-                            } else {
-                                $minecraftHasGroupsFiltered[$minecraftID][$uuid] = [$group];
+                foreach ($wscGroups as $groupID => $wscGroupInfo) {
+                    foreach ($wscGroupInfo as $minecraftID2 => $groups) {
+                        if ($minecraftID2 != $minecraftID) {
+                            continue;
+                        }
+                        foreach ($groups as $group) {
+                            if (in_array($group, $hasGroups)) {
+                                if (isset($minecraftHasGroupsFiltered[$minecraftID][$uuid])) {
+                                    \array_push($minecraftHasGroupsFiltered[$minecraftID][$uuid], $group);
+                                } else {
+                                    $minecraftHasGroupsFiltered[$minecraftID][$uuid] = [$group];
+                                }
                             }
                         }
                     }
