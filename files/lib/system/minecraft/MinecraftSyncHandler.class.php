@@ -340,6 +340,24 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     /**
      * @inheritDoc
      */
+    public function syncUser(int $userID)
+    {
+        $minecraftUserList = new MinecraftUserList();
+        $minecraftUserList->getConditionBuilder()->add('userID = ?', [$userID]);
+        $minecraftUserList->readObjects();
+        $minecraftUsers = $minecraftUserList->getObjects();
+
+        $responses = [];
+        foreach ($minecraftUsers as $minecraftUserID => $minecraftUser) {
+            $responses[$minecraftUserID] = $this->sync($minecraftUser);
+        }
+
+        return $responses;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function sync(MinecraftUser $minecraftUser)
     {
         // 1. UUID & User
