@@ -7,6 +7,13 @@ use wcf\system\minecraft\MinecraftSyncHandler;
 
 class MinecraftSyncBackgroundJob extends AbstractBackgroundJob
 {
+    protected int $userID;
+
+    public function __construct(?int $userID = null)
+    {
+        $this->userID = $userID;
+    }
+
     /**
      * @inheritDoc
      */
@@ -28,7 +35,13 @@ class MinecraftSyncBackgroundJob extends AbstractBackgroundJob
     public function perform()
     {
         if (MINECRAFT_SYNC_ENABLED) {
-            MinecraftSyncHandler::getInstance()->syncAll();
+            if ($this->userID === null) {
+                $responses = MinecraftSyncHandler::getInstance()->syncAll();
+                // TODO fail on TooManyConnections in responses
+            } else {
+                $responses = MinecraftSyncHandler::getInstance()->syncUser($this->userID);
+                // TODO fail on TooManyConnections in responses
+            }
         }
     }
 }
