@@ -26,6 +26,7 @@
 
 	<instructions type="install">
 		<instruction type="acpTemplate"/>
+		<instruction type="cronjob"/>
 		<instruction type="eventListener"/>
 		<instruction type="file"/>
 		<instruction type="language"/>
