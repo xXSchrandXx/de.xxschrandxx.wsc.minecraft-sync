@@ -2,6 +2,7 @@
 <data xmlns="http://www.woltlab.com"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/5.4/eventListener.xsd">
 	<import>
+		<!-- Synchronisiert alle, wenn Daten einer Gruppe geändert werden -->
 		<eventlistener name="minecraftACPGroupAdd">
 			<eventclassname>wcf\acp\form\UserGroupAddForm</eventclassname>
 			<eventname>readFormParameters,validate,save,assignVariables</eventname>
@@ -9,10 +10,12 @@
 			<inherit>1</inherit>
 			<listenerclassname>wcf\system\event\listener\MinecraftAcpGroupAddListener</listenerclassname>
 		</eventlistener>
+		<!-- Synchronisiert einen Benutzer, wenn ein MinecraftUser hinzugefügt und entfernt wird -->
 		<eventlistener name="minecraftUserModify">
 			<eventclassname>wcf\data\user\minecraft\MinecraftAction</eventclassname>
 			<eventname>finalizeAction</eventname>
 			<listenerclassname>wcf\system\event\listener\MinecraftSyncMinecraftLinkerListener</listenerclassname>
 		</eventlistener>
+		<!-- Synchronisiert einen Benutzer, wenn seine Gruppen geändert werden -->
 	</import>
 </data>
