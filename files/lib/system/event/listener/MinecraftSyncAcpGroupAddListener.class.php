@@ -10,7 +10,7 @@ use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
 use wcf\util\JSON;
 
-class MinecraftAcpGroupAddListener implements IParameterizedEventListener
+class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
 {
     /**
      * Liste der Minecraft Server Gruppen
@@ -49,9 +49,7 @@ class MinecraftAcpGroupAddListener implements IParameterizedEventListener
      */
     public function validate($eventObj)
     {
-        foreach (MinecraftSyncHandler::getInstance()->getMinecrafts() as $minecraft) {
-            // TODO
-        }
+        // TODO validate minecraftGroupNames
     }
 
     /**
