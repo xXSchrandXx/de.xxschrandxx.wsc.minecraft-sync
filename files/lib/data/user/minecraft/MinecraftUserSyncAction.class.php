@@ -7,13 +7,13 @@ use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
 use wcf\util\JSON;
 
-class MinecraftSyncAction extends MinecraftUserAction
+class MinecraftUserSyncAction extends MinecraftUserAction
 {
     /**
      * list of permissions required sync objects
      * @var string[]
      */
-    protected $permissionsSync = ['user.minecraftLinker.canManage'];
+    protected $permissionsSync = ['user.minecraftSync.canManage'];
 
     public function validateSync()
     {

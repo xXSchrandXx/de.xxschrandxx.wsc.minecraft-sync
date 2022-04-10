@@ -3,7 +3,7 @@
 </a>
 
 <script data-relocate="true">
-	require(["xXSchrandXx/Minecraft/MinecraftSync", "Language"], function(MinecraftSync, Language) {
+	require(["xXSchrandXx/Minecraft/MinecraftUserSync", "Language"], function(MinecraftSync, Language) {
 		Language.addObject({
 			'wcf.page.minecraftSyncUserAdd.button.status.result': '{lang}wcf.page.minecraftSyncUserAdd.button.status.result{/lang}'
 		});

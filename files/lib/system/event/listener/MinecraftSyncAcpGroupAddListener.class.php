@@ -10,14 +10,19 @@ use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
 use wcf\util\JSON;
 
-class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
+class MinecraftSyncACPGroupAddListener implements IParameterizedEventListener
 {
     /**
      * Liste der Minecraft Server Gruppen
-     *
      * @var array
      */
     protected $minecraftGroups = [];
+
+    /**
+     * Liste der alten Minecraft Server Gruppen
+     * @var array
+     */
+    protected $oldMinecraftGroups = [];
 
     /**
      * @inheritDoc
@@ -32,6 +37,16 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
         }
 
         $this->$eventName($eventObj);
+    }
+
+    /**
+     * @see AbstractForm::readData()
+     */
+    public function readData($eventObj)
+    {
+        if ($eventObj instanceof UserGroupEditForm) {
+            $this->oldMinecraftGroups = JSON::decode($eventObj->group->minecraftGroups);
+        }
     }
 
     /**
@@ -62,10 +77,11 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
         ]);
 
         if (MINECRAFT_SYNC_ENABLED) {
+            // TODO add difference between old and new
             BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob());
         }
 
-        // // reset values
+        // reset values
         if (!($eventObj instanceof UserGroupEditForm)) {
             $this->minecraftGroups = [];
         }

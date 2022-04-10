@@ -8,10 +8,12 @@ use wcf\system\minecraft\MinecraftSyncHandler;
 class MinecraftSyncSyncBackgroundJob extends AbstractBackgroundJob
 {
     protected ?int $userID;
+    protected array $unsetGroups;
 
-    public function __construct(?int $userID = null)
+    public function __construct(array $unsetGroups = [], ?int $userID = null)
     {
         $this->userID = $userID;
+        $this->unsetGroups = $unsetGroups;
     }
 
     /**
@@ -36,10 +38,10 @@ class MinecraftSyncSyncBackgroundJob extends AbstractBackgroundJob
     {
         if (MINECRAFT_SYNC_ENABLED) {
             if ($this->userID === null) {
-                $responses = MinecraftSyncHandler::getInstance()->syncAll();
+                $responses = MinecraftSyncHandler::getInstance()->syncAll($this->unsetGroups);
                 // TODO fail on TooManyConnections in responses
             } else {
-                $responses = MinecraftSyncHandler::getInstance()->syncUser($this->userID);
+                $responses = MinecraftSyncHandler::getInstance()->syncUser($this->userID, $this->unsetGroups);
                 // TODO fail on TooManyConnections in responses
             }
         }

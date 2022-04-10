@@ -341,7 +341,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     /**
      * @inheritDoc
      */
-    public function syncUser(int $userID)
+    public function syncUser(int $userID, array $removeGroups = [])
     {
         $minecraftUserList = new MinecraftUserList();
         $minecraftUserList->getConditionBuilder()->add('userID = ?', [$userID]);
@@ -350,7 +350,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 
         $responses = [];
         foreach ($minecraftUsers as $minecraftUserID => $minecraftUser) {
-            $responses[$minecraftUserID] = $this->sync($minecraftUser);
+            $responses[$minecraftUserID] = $this->sync($minecraftUser, $removeGroups);
         }
 
         return $responses;
@@ -359,7 +359,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     /**
      * @inheritDoc
      */
-    public function sync(MinecraftUser $minecraftUser)
+    public function sync(MinecraftUser $minecraftUser, array $removeGroups = [])
     {
         // 1. UUID & User
         $uuid = $minecraftUser->minecraftUUID;
@@ -382,7 +382,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         }
 
         // 5. Auflisten welche Gruppen der Benutzer nicht haben sollte
-        $shouldNotHave = [];
+        $shouldNotHave = $removeGroups;
         foreach ($wscGroups as $groupID => $wscGroupInfo) {
             foreach ($wscGroupInfo as $minecraftID => $wscGroup) {
                 if (!in_array($groupID, $userGroupIDs)) {
@@ -390,6 +390,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 }
             }
         }
+        wcfDebug($shouldNotHave);
 
         // 6. Benutzergruppen von Minecraft-Servern erhalten
         $minecraftHasGroups = $this->getUserGroups($uuid);
@@ -548,7 +549,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     /**
      * @inheritDoc
      */
-    public function syncAll()
+    public function syncAll(array $removeGroups = [])
     {
 
         $minecraftUserList = new MinecraftUserList();
@@ -592,7 +593,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         }
 
         // 5. Auflisten welche Gruppen der Benutzer nicht haben sollte
-        $usersShouldNotHave = [];
+        $usersShouldNotHave = $removeGroups;
         foreach ($userIDs as $userID => $uuids) {
             foreach ($wscGroups as $groupID => $wscGroupInfo) {
                 foreach ($wscGroupInfo as $minecraftID => $wscGroup) {
@@ -613,11 +614,17 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         // 7. Benutzergruppen vom Minecraft-Server filtern.
         $minecraftHasGroupsFiltered = [];
         foreach ($uuidsMinecraftHasGroups as $minecraftID => $a) {
+            if (!is_array($a)) {
+                continue;
+            }
             if (!array_key_exists('users', $a)) {
                 continue;
             }
             $minecraftHasGroups = $a['users'];
             foreach ($minecraftHasGroups as $uuid => $b) {
+                if (!is_array($b)) {
+                    continue;
+                }
                 if (!array_key_exists('groups', $b)) {
                     continue;
                 }
