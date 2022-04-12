@@ -3,10 +3,10 @@
 </a>
 
 <script data-relocate="true">
-	require(["xXSchrandXx/Minecraft/MinecraftUserSync", "Language"], function(MinecraftSync, Language) {
+	require(["xXSchrandXx/Minecraft/MinecraftUserSync", "Language"], function(MinecraftUserSync, Language) {
 		Language.addObject({
 			'wcf.page.minecraftSyncUserAdd.button.status.result': '{lang}wcf.page.minecraftSyncUserAdd.button.status.result{/lang}'
 		});
-		new MinecraftSync.default();
+		new MinecraftUserSync.default();
 	});
 </script>

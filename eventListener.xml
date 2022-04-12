@@ -8,7 +8,7 @@
 			<eventname>readFormParameters,validate,save,assignVariables</eventname>
 			<environment>admin</environment>
 			<inherit>1</inherit>
-			<listenerclassname>wcf\system\event\listener\MinecraftSyncACPGroupAddListener</listenerclassname>
+			<listenerclassname>wcf\system\event\listener\MinecraftSyncAcpGroupAddListener</listenerclassname>
 		</eventlistener>
 		<!-- Synchronisiert einen Benutzer, wenn ein MinecraftUser hinzugefügt und entfernt wird -->
 		<eventlistener name="minecraftUserModify">

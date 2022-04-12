@@ -376,7 +376,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         foreach ($wscGroups as $groupID => $wscGroupInfo) {
             foreach ($wscGroupInfo as $minecraftID => $wscGroup) {
                 if (in_array($groupID, $userGroupIDs)) {
-                    $shouldHave[$groupID] = $wscGroup;
+                    $shouldHave[$groupID][$minecraftID] = $wscGroup;
                 }
             }
         }
@@ -386,11 +386,10 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         foreach ($wscGroups as $groupID => $wscGroupInfo) {
             foreach ($wscGroupInfo as $minecraftID => $wscGroup) {
                 if (!in_array($groupID, $userGroupIDs)) {
-                    $shouldNotHave[$groupID] = $wscGroup;
+                    $shouldNotHave[$groupID][$minecraftID] = $wscGroup;
                 }
             }
         }
-        wcfDebug($shouldNotHave);
 
         // 6. Benutzergruppen von Minecraft-Servern erhalten
         $minecraftHasGroups = $this->getUserGroups($uuid);
@@ -424,21 +423,19 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 
         // 8. Gruppen müssen hinzugefügt werden
         $needToAdd = [];
-        foreach ($shouldHave as $shouldHaveGroups) {
+        foreach ($shouldHave as $minecraftID => $shouldHaveGroups) {
             foreach ($shouldHaveGroups as $shouldHaveGroup) {
-                foreach ($this->minecraftIDs as $minecraftID) {
-                    $add = false;
-                    if (!array_key_exists($minecraftID, $minecraftHasGroupsFiltered)) {
-                        $add = true;
-                    } else if (!in_array($shouldHaveGroup, $minecraftHasGroupsFiltered[$minecraftID])) {
-                        $add = true;
-                    }
-                    if ($add) {
-                        if (isset($needToAdd[$minecraftID])) {
-                            \array_push($needToAdd[$minecraftID], $shouldHaveGroup);
-                        } else {
-                            $needToAdd[$minecraftID] = [$shouldHaveGroup];
-                        }
+                $add = false;
+                if (!array_key_exists($minecraftID, $minecraftHasGroupsFiltered)) {
+                    $add = true;
+                } else if (!in_array($shouldHaveGroup, $minecraftHasGroupsFiltered[$minecraftID])) {
+                    $add = true;
+                }
+                if ($add) {
+                    if (isset($needToAdd[$minecraftID])) {
+                        \array_push($needToAdd[$minecraftID], $shouldHaveGroup);
+                    } else {
+                        $needToAdd[$minecraftID] = [$shouldHaveGroup];
                     }
                 }
             }
@@ -448,7 +445,10 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         $needToRemove = [];
         foreach ($minecraftHasGroupsFiltered as $minecraftID => $hasGroups) {
             foreach ($hasGroups as $hasGroup) {
-                foreach ($shouldNotHave as $shouldNotHaveGroups) {
+                foreach ($shouldNotHave as $minecraftID2 => $shouldNotHaveGroups) {
+                    if ($minecraftID != $minecraftID2) {
+                        continue;
+                    }
                     if (in_array($hasGroup, $shouldNotHaveGroups)) {
                         if (isset($needToRemove[$minecraftID])) {
                             \array_push($needToRemove[$minecraftID], $hasGroup);
@@ -459,6 +459,8 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 }
             }
         }
+
+        wcfDebug($needToAdd, $needToRemove);
 
         $response = [
             'added' => [],

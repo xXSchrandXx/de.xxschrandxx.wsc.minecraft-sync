@@ -10,7 +10,7 @@ use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
 use wcf\util\JSON;
 
-class MinecraftSyncACPGroupAddListener implements IParameterizedEventListener
+class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
 {
     /**
      * Liste der Minecraft Server Gruppen
@@ -78,7 +78,7 @@ class MinecraftSyncACPGroupAddListener implements IParameterizedEventListener
 
         if (MINECRAFT_SYNC_ENABLED) {
             // TODO add difference between old and new
-            BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob());
+            BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob(array_diff_assoc($this->oldMinecraftGroups, $this->minecraftGroups)));
         }
 
         // reset values
