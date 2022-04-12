@@ -15,7 +15,7 @@ class MinecraftSyncUserChangeGroupListener implements IParameterizedEventListene
         if (!MINECRAFT_SYNC_ENABLED) {
             return;
         }
-        $action = $eventObj->action;
+        $action = $eventObj->getActionName();
         if ($action == 'removeFromGroups' || $action == 'addToGroups') {
             /** @var BackgroundQueueHandler */
             $handler = BackgroundQueueHandler::getInstance();

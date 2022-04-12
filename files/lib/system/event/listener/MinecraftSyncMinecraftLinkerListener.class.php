@@ -16,7 +16,7 @@ class MinecraftSyncMinecraftLinkerListener implements IParameterizedEventListene
         if (!MINECRAFT_SYNC_ENABLED) {
             return;
         }
-        $action = $eventObj->action;
+        $action = $eventObj->getActionName();
         if ($action == 'create') {
             /** @var MinecraftUser */
             $minecraftUser = $eventObj->parameters['data'];

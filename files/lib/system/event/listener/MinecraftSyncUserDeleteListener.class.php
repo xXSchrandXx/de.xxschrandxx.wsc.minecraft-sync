@@ -4,18 +4,19 @@ namespace wcf\system\event\listener;
 
 use wcf\system\background\BackgroundQueueHandler;
 use wcf\system\background\job\MinecraftSyncDeleteBackgroundJob;
+use wcf\data\user\UserAction;
 
 class MinecraftSyncUserDeleteListener implements IParameterizedEventListener
 {
     /**
      * @inheritDoc
      */
-    public function execute($eventObj, $className, $eventName, array &$parameters)
+    public function execute(/** @var UserAction */ $eventObj, $className, $eventName, array &$parameters)
     {
         if (!MINECRAFT_SYNC_ENABLED) {
             return;
         }
-        if ($eventObj->action == 'delete') {
+        if ($eventObj->getActionName() == 'delete') {
             /** @var BackgroundQueueHandler */
             $handler = BackgroundQueueHandler::getInstance();
             foreach ($eventObj->getObjects() as $userEditor) {
