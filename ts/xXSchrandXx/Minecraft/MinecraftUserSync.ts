@@ -24,7 +24,7 @@ export class MinecraftUserSync {
                 return {
                     data: {
                         actionName: "sync",
-                        className: "wcf\\data\\minecraft\\user\\MinecraftUserSyncAction",
+                        className: "wcf\\data\\user\\minecraft\\MinecraftUserSyncAction",
                         objectIDs: [objectID],
                     }
                 };

@@ -13,7 +13,7 @@ class MinecraftUserSyncAction extends MinecraftUserAction
      * list of permissions required sync objects
      * @var string[]
      */
-    protected $permissionsSync = ['user.minecraftSync.canManage'];
+    protected $permissionsSync = ['admin.minecraftSync.canManage'];
 
     public function validateSync()
     {
