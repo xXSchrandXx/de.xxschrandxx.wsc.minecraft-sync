@@ -19,12 +19,6 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     protected $minecraftGroups = [];
 
     /**
-     * Liste der alten Minecraft Server Gruppen
-     * @var array
-     */
-    protected $oldMinecraftGroups = [];
-
-    /**
      * @inheritDoc
      */
     public function execute($eventObj, $className, $eventName, array &$parameters)
@@ -40,17 +34,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     }
 
     /**
-     * @see AbstractForm::readData()
-     */
-    public function readData(/** @var UserGroupAddForm */$eventObj)
-    {
-        if ($eventObj instanceof UserGroupEditForm) {
-            $this->oldMinecraftGroups = JSON::decode($eventObj->group->minecraftGroups);
-        }
-    }
-
-    /**
-     * @see AbstractForm::readFormparameters()
+     * @see \wcf\form\AbstractForm::readFormparameters()
      */
     public function readFormParameters()
     {
@@ -60,7 +44,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     }
 
     /**
-     * @see AbstractForm::validate()
+     * @see \wcf\form\AbstractForm::validate()
      */
     public function validate(/** @var UserGroupAddForm */$eventObj)
     {
@@ -68,17 +52,29 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     }
 
     /**
-     * @see AbstractForm::save()
+     * @see \wcf\form\AbstractForm::save()
      */
     public function save(/** @var UserGroupAddForm */$eventObj)
     {
+        $oldMinecraftGroups = [];
+        try {
+            $oldMinecraftGroups = JSON::decode($eventObj->group->minecraftGroups);
+        } catch (SystemException $e) {
+        }
+
         $eventObj->additionalFields = array_merge($eventObj->additionalFields, [
             'minecraftGroups' => JSON::encode($this->minecraftGroups)
         ]);
 
         if (MINECRAFT_SYNC_ENABLED) {
             // TODO add difference between old and new
-            BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob(array_diff_assoc($this->oldMinecraftGroups, $this->minecraftGroups)));
+            wcfDebug(
+                array_diff_assoc(
+                    $oldMinecraftGroups,
+                    $this->minecraftGroups
+                )
+            );
+//            BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob(array_diff_assoc($this->oldMinecraftGroups, $this->minecraftGroups)));
         }
 
         // reset values
@@ -88,7 +84,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     }
 
     /**
-     * @see AbstractForm::assignVariables()
+     * @see \wcf\form\AbstractForm::assignVariables()
      */
     public function assignVariables(/** @var UserGroupAddForm */$eventObj)
     {
