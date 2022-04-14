@@ -56,25 +56,30 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
      */
     public function save(/** @var UserGroupAddForm */$eventObj)
     {
-        $oldMinecraftGroups = [];
-        try {
-            $oldMinecraftGroups = JSON::decode($eventObj->group->minecraftGroups);
-        } catch (SystemException $e) {
-        }
-
-        $eventObj->additionalFields = array_merge($eventObj->additionalFields, [
-            'minecraftGroups' => JSON::encode($this->minecraftGroups)
-        ]);
-
         if (MINECRAFT_SYNC_ENABLED) {
-            // TODO add difference between old and new
-            wcfDebug(
-                array_diff_assoc(
-                    $oldMinecraftGroups,
-                    $this->minecraftGroups
-                )
-            );
-//            BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob(array_diff_assoc($this->oldMinecraftGroups, $this->minecraftGroups)));
+            if ($eventObj instanceof UserGroupEditForm) {
+                $oldMinecraftGroups = [];
+                try {
+                    $oldMinecraftGroups = JSON::decode($eventObj->group->minecraftGroups);
+                } catch (SystemException $e) {
+                }
+    
+                $eventObj->additionalFields = array_merge($eventObj->additionalFields, [
+                    'minecraftGroups' => JSON::encode($this->minecraftGroups)
+                ]);
+
+                // TODO add difference between old and new
+                wcfDebug($oldMinecraftGroups, $this->minecraftGroups);
+                wcfDebug(
+                    array_diff_assoc(
+                        $oldMinecraftGroups,
+                        $this->minecraftGroups
+                    )
+                );
+//                BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob(array_diff_assoc($this->oldMinecraftGroups, $this->minecraftGroups)));
+            } else {
+                BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob());
+            }
         }
 
         // reset values
