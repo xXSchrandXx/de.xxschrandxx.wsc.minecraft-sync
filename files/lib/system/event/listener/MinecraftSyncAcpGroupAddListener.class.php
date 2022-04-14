@@ -6,6 +6,7 @@ use wcf\acp\form\UserGroupEditForm;
 use wcf\system\background\BackgroundQueueHandler;
 use wcf\system\background\job\MinecraftSyncSyncBackgroundJob;
 use wcf\system\exception\SystemException;
+use wcf\system\exception\UserInputException;
 use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
 use wcf\util\JSON;
@@ -49,6 +50,19 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     public function validate(/** @var UserGroupAddForm */$eventObj)
     {
         // TODO validate minecraftGroupNames
+        /** @var MinecraftSyncHandler */
+        $handler = MinecraftSyncHandler::getInstance();
+        $groups = $handler->groupList();
+        foreach ($this->minecraftGroups as $minecraftID => $groupNames) {
+            if (!array_key_exists($minecraftID, $groups)) {
+                throw new UserInputException('minecraftGroupNames', "Don't know '$minecraftID'.");
+            }
+            foreach ($groupNames as $groupName) {
+                if (!in_array($groupName, $groups[$minecraftID])) {
+                    throw new UserInputException('minecraftGroupNames', "Group '$groupName' does not exist on Server with id '$minecraftID'.");
+                }
+            }
+        }
     }
 
     /**
@@ -68,15 +82,23 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
                     'minecraftGroups' => JSON::encode($this->minecraftGroups)
                 ]);
 
-                // TODO add difference between old and new
-                wcfDebug($oldMinecraftGroups, $this->minecraftGroups);
-                wcfDebug(
-                    array_diff_assoc(
-                        $oldMinecraftGroups,
-                        $this->minecraftGroups
-                    )
-                );
-//                BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob(array_diff_assoc($this->oldMinecraftGroups, $this->minecraftGroups)));
+                $diff = [];
+                foreach ($oldMinecraftGroups as $minecraftID => $groupNames) {
+                    if (array_key_exists($minecraftID, $this->minecraftGroups)) {
+                        foreach ($groupNames as $groupName) {
+                            if (!in_array($groupName, $this->minecraftGroups[$minecraftID])) {
+                                if (isset($diff[$minecraftID][$eventObj->groupID])) {
+                                    array_push($diff[$minecraftID][$eventObj->groupID], $groupName);
+                                } else {
+                                    $diff[$minecraftID][$eventObj->groupID] = [$groupName];
+                                }
+                            }
+                        }
+                    } else {
+                        $diff[$minecraftID][$eventObj->groupID] = $groupNames;
+                    }
+                }
+                BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob($diff));
             } else {
                 BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob());
             }
@@ -101,14 +123,15 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
             }
         }
 
-        $minecraft = MinecraftSyncHandler::getInstance();
+        /** @var MinecraftSyncHandler */
+        $handler = MinecraftSyncHandler::getInstance();
 
         // assign variables
         WCF::getTPL()->assign(
             [
-                'minecrafts' => $minecraft->getMinecrafts(),
+                'minecrafts' => $handler->getMinecrafts(),
                 'minecraftGroups' => $this->minecraftGroups,
-                'minecraftGroupNames' => $minecraft->groupList()
+                'minecraftGroupNames' => $handler->groupList()
             ]
         );
     }
