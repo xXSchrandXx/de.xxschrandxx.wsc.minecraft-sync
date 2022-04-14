@@ -42,7 +42,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     /**
      * @see AbstractForm::readData()
      */
-    public function readData($eventObj)
+    public function readData(/** @var UserGroupAddForm */$eventObj)
     {
         if ($eventObj instanceof UserGroupEditForm) {
             $this->oldMinecraftGroups = JSON::decode($eventObj->group->minecraftGroups);
@@ -62,7 +62,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     /**
      * @see AbstractForm::validate()
      */
-    public function validate($eventObj)
+    public function validate(/** @var UserGroupAddForm */$eventObj)
     {
         // TODO validate minecraftGroupNames
     }
@@ -70,7 +70,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     /**
      * @see AbstractForm::save()
      */
-    public function save($eventObj)
+    public function save(/** @var UserGroupAddForm */$eventObj)
     {
         $eventObj->additionalFields = array_merge($eventObj->additionalFields, [
             'minecraftGroups' => JSON::encode($this->minecraftGroups)
@@ -90,7 +90,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     /**
      * @see AbstractForm::assignVariables()
      */
-    public function assignVariables($eventObj)
+    public function assignVariables(/** @var UserGroupAddForm */$eventObj)
     {
         if (empty($_POST) && $eventObj instanceof UserGroupEditForm) {
             try {
