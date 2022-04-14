@@ -20,5 +20,6 @@
 	</category>
 	<category name="wcf.page.minecraftSyncUserAdd">
 		<item name="wcf.page.minecraftSyncUserAdd.button.status"><![CDATA[Status]]></item>
+		<item name="wcf.page.minecraftSyncUserAdd.button.status.result"><![CDATA[Antwort]]></item>
 	</category>
 </language>
