@@ -32,6 +32,7 @@ class MinecraftUserSyncAction extends MinecraftUserAction
             $minecraftUser = new MinecraftUser($objectID);
             $response[$objectID] = JSON::encode(MinecraftSyncHandler::getInstance()->sync($minecraftUser));
         }
+// TODO turn into html
         return $response;
     }
 }
