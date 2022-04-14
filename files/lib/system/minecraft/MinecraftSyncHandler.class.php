@@ -767,7 +767,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                     foreach ($shouldNotHaveWSCGroups as $groupID => $shouldNotHaveGroups) {
                         if (isset($usersShouldNotHave[$userID][$minecraftID][$groupID])) {
                             foreach ($shouldNotHaveGroups as $shouldNotHaveGroup) {
-                                if (!in_array($shouldNotHaveGroup,$usersShouldNotHave[$userID][$minecraftID][$groupID])) {
+                                if (!in_array($shouldNotHaveGroup, $usersShouldNotHave[$userID][$minecraftID][$groupID])) {
                                     array_push($usersShouldNotHave[$userID][$minecraftID][$groupID], $shouldNotHaveGroup);
                                 }
                             }
