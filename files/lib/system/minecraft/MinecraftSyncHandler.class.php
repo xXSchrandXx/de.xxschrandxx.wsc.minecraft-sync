@@ -146,7 +146,6 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                     if ($response === null) {
                         throw new MinecraftException("Could not get users groups on server with id " . $minecraftID);
                     }
-                    // TODO
                     return JSON::decode($response->getBody());
                 }
             } catch (GuzzleException | SystemException | MinecraftException $e) {
@@ -942,7 +941,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 
         $response = [
             'status' => 'OK',
-            'statusCode' => 200, 
+            'statusCode' => 200,
             'added' => [],
             'removed' => []
         ];

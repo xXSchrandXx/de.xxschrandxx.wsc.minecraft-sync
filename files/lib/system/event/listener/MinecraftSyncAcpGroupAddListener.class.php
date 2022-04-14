@@ -49,7 +49,6 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
      */
     public function validate(/** @var UserGroupAddForm */$eventObj)
     {
-        // TODO validate minecraftGroupNames
         /** @var MinecraftSyncHandler */
         $handler = MinecraftSyncHandler::getInstance();
         $groups = $handler->groupList();
@@ -77,7 +76,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
                     $oldMinecraftGroups = JSON::decode($eventObj->group->minecraftGroups);
                 } catch (SystemException $e) {
                 }
-    
+
                 $eventObj->additionalFields = array_merge($eventObj->additionalFields, [
                     'minecraftGroups' => JSON::encode($this->minecraftGroups)
                 ]);
