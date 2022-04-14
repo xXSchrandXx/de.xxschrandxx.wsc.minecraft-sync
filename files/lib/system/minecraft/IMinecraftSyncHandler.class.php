@@ -34,7 +34,14 @@ interface IMinecraftSyncHandler
      * Gibt alle Gruppen aller Spieler auf den Minecraft-Server(n) wieder.
      * @param $map
      * @param $minecraftID
-     * @return array
+     * @return array|false structure:
+     * Array
+     * (
+     *     $minecraftID => Array
+     *     (
+     *          $i => $groupName
+     *     )
+     * )
      */
     public function getUsersGroups(array $map, ?int $minecraftID = null);
 
@@ -74,7 +81,17 @@ interface IMinecraftSyncHandler
 
     /**
      * Gibt Gruppen an, welche von Minecraft-Sync synchronisiert werden sollen.
-     * @return array
+     * @return array structure:
+     * Array
+     * (
+     *     $groupID => Array
+     *     (
+     *         $minecraftID => Array
+     *         (
+     *             $i => $groupName
+     *         )
+     *     )
+     * )
      */
     public function getWSCGroups();
 
@@ -82,6 +99,35 @@ interface IMinecraftSyncHandler
      * Synchronisiert einen MinecraftUser
      * @param $minecraftUser
      * @param $removeGroups
+     * @return array structure:
+     * Array
+     * (
+     *     'status' => $status
+     *     'statusCode' => $statusCode
+     * {If run successfully also:}
+     *     'added' => Array
+     *     (
+     *         $minecraftID => Array
+     *         (
+     *             $i => Array
+     *             (
+     *                 'status' => $status
+     *                 'statusCode' => $statusCode
+     *             )
+     *         )
+     *     )
+     *     'removed' => Array
+     *     (
+     *         $minecraftID => Array
+     *         (
+     *             $i => Array
+     *             (
+     *                 'status' => $statusMessage
+     *                 'statusCode' => $statusCode
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function sync(MinecraftUser $minecraftUser, array $removeGroups = []);
 
@@ -89,7 +135,38 @@ interface IMinecraftSyncHandler
      * Syncronisiert alle MinecraftUser des User mit der gegebenen ID.
      * @param $userID
      * @param $removeGroups
-     * @return array
+     * @return array structure:
+     * Array
+     * (
+     *     $minecraftUserID => Array
+     *     (
+     *         'status' => $status
+     *         'statusCode' => $statusCode
+     * {If run successfully also:}
+     *         'added' => Array
+     *         (
+     *             $minecraftID => Array
+     *             (
+     *                 $i => Array
+     *                 (
+     *                     'status' => $status
+     *                     'statusCode' => $status
+     *                 )
+     *             )
+     *         )
+     *         'removed' => Array
+     *         (
+     *             $minecraftID => Array
+     *             (
+     *                 $i => Array
+     *                 (
+     *                     'status' => $status
+     *                     'statusCode' => $statusCode
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function syncUser(int $userID, array $removeGroups = []);
 
