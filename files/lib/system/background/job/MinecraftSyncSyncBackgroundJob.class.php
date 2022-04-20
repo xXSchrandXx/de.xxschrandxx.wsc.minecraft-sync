@@ -16,19 +16,14 @@ class MinecraftSyncSyncBackgroundJob extends AbstractBackgroundJob
         $this->unsetGroups = $unsetGroups;
     }
 
+    protected $retryAfter = 3 * 10;
+
     /**
      * @inheritDoc
      */
     public function retryAfter()
     {
-        switch ($this->getFailures()) {
-            case 1:
-                return 5 * 60;
-            case 2:
-                return 30 * 60;
-            case 3:
-                return 2 * 60 * 60;
-        }
+        return $this->retryAfter;
     }
 
     /**
@@ -40,9 +35,11 @@ class MinecraftSyncSyncBackgroundJob extends AbstractBackgroundJob
             if ($this->userID === null) {
                 $responses = MinecraftSyncHandler::getInstance()->syncAll($this->unsetGroups);
                 // TODO fail on TooManyConnections in responses
+                // Waiting until 5.5 update
             } else {
                 $responses = MinecraftSyncHandler::getInstance()->syncUser($this->userID, $this->unsetGroups);
                 // TODO fail on TooManyConnections in responses
+                // Waiting until 5.5 update
             }
         }
     }

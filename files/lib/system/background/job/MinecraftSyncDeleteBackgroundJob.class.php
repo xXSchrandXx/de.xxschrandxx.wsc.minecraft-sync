@@ -15,19 +15,14 @@ class MinecraftSyncDeleteBackgroundJob extends AbstractBackgroundJob
         $this->minecraftUser = $minecraftUser;
     }
 
+    protected $retryAfter = 3 * 10;
+
     /**
      * @inheritDoc
      */
     public function retryAfter()
     {
-        switch ($this->getFailures()) {
-            case 1:
-                return 5 * 60;
-            case 2:
-                return 30 * 60;
-            case 3:
-                return 2 * 60 * 60;
-        }
+        return $this->retryAfter;
     }
 
     /**
@@ -38,6 +33,7 @@ class MinecraftSyncDeleteBackgroundJob extends AbstractBackgroundJob
         if (MINECRAFT_SYNC_ENABLED) {
             $responses = MinecraftSyncHandler::getInstance()->delete($this->minecraftUser);
             // TODO fail on TooManyConnections in responses
+            // Waiting until 5.5 update
         }
     }
 }
