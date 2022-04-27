@@ -5,7 +5,6 @@ namespace wcf\data\user\minecraft;
 use wcf\system\exception\PermissionDeniedException;
 use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
-use wcf\util\JSON;
 
 class MinecraftUserSyncAction extends MinecraftUserAction
 {
@@ -30,9 +29,8 @@ class MinecraftUserSyncAction extends MinecraftUserAction
         $response = [];
         foreach ($this->getObjectIDs() as $objectID) {
             $minecraftUser = new MinecraftUser($objectID);
-            $response[$objectID] = JSON::encode(MinecraftSyncHandler::getInstance()->sync($minecraftUser));
+            $response[$objectID] = MinecraftSyncHandler::getInstance()->sync($minecraftUser);
         }
-// TODO turn into html
         return $response;
     }
 }

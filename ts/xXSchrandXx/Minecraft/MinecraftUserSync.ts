@@ -42,7 +42,7 @@ export class MinecraftUserSync {
                             }
                         }
                     }
-                }, data['returnValues'][objectID]);
+                }, JSON.stringify(data['returnValues'][objectID]));
             }
         });
     }
