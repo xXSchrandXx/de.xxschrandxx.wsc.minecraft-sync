@@ -130,11 +130,9 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             return $playerGroups;
         } else {
             try {
-                // TODO add post_max_size
-                $size = $this->getLaterJsonSize($map);
-                if ($size > ini_get('post_max_size')) {
-                    $length = $size / ini_get('post_max_size');
-                    $chunks = array_chunk($map, $length, true);
+                // TODO limit post size
+                if (count($map) > 100) {
+                    $chunks = array_chunk($map, 100, true);
                     $response = [];
                     foreach ($chunks as $chunk) {
                         $response += $this->getUsersGroups($chunk, $minecraftID);
@@ -204,11 +202,9 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             return $responses;
         } else {
             try {
-                // TODO add post_max_size
-                $size = $this->getLaterJsonSize($map);
-                if ($size > ini_get('post_max_size')) {
-                    $length = $size / ini_get('post_max_size');
-                    $chunks = array_chunk($map, $length, true);
+                // TODO limit post size
+                if (count($map) > 100) {
+                    $chunks = array_chunk($map, 100, true);
                     $response = [];
                     foreach ($chunks as $chunk) {
                         $response += $this->addUsersToGroups($chunk, $minecraftID);
@@ -281,11 +277,9 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             return $responses;
         } else {
             try {
-                // TODO add post_max_size
-                $size = $this->getLaterJsonSize($map);
-                if ($size > ini_get('post_max_size')) {
-                    $length = $size / ini_get('post_max_size');
-                    $chunks = array_chunk($map, $length, true);
+                // TODO limit post size
+                if (count($map) > 100) {
+                    $chunks = array_chunk($map, 100, true);
                     $response = [];
                     foreach ($chunks as $chunk) {
                         $response += $this->getUsersGroups($chunk, $minecraftID);
@@ -957,10 +951,5 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         }
 
         return $response;
-    }
-
-    private function getLaterJsonSize(array $array)
-    {
-        return strlen(JSON::encode($array));
     }
 }

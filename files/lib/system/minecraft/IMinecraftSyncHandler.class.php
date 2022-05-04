@@ -32,7 +32,11 @@ interface IMinecraftSyncHandler
 
     /**
      * Gibt alle Gruppen aller Spieler auf den Minecraft-Server(n) wieder.
-     * @param $map
+     * @param $map strucutre:
+     * Array
+     * (
+     *     $uuid
+     * )
      * @param $minecraftID
      * @return array|false structure:
      * Array
@@ -56,7 +60,14 @@ interface IMinecraftSyncHandler
 
     /**
      * Fügt alle Spieler auf den Minecraft-Server(n) in die Gruppen hinzu.
-     * @param $map
+     * @param $map structure:
+     * Array
+     * (
+     *     $minecraftUUID => Array
+     *     (
+     *         $id => $groupName
+     *     )
+     * )
      * @param $minecraftID
      * @return array
      */
@@ -73,7 +84,14 @@ interface IMinecraftSyncHandler
 
     /**
      * Entfernt alle Spieler auf den Minecraft-Server(n) aus den Gruppen.
-     * @param $map
+     * @param $map structure:
+     * Array
+     * (
+     *     $minecraftUUID => Array
+     *     (
+     *         $id => $groupName
+     *     )
+     * )
      * @param $minecraftID
      * @return array
      */
