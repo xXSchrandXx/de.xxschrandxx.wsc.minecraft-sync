@@ -6,9 +6,16 @@ Quicklinks: [General](#general) | [Links](#links) | [License](https://github.com
 ## Description
 This plugin syncs groups between WoltLab and Minecraft.
 ## Requirements
-1. [Minecraft-API](#links) installed on WoltLab.
-2. [WSC-Minecraft-Bridge](#links) installed on your Bukkit- / Spigot- / BungeeCord-Server with `permission` module enabled.
-3. [Minecraft-Linker](#links) installed on WoltLab.
+* [Minecraft-API](#links) installed and configured on WoltLab.
+* [Supported Permission Plugin](#supported-permission-plugins) installed on [WSC-Minecraft-Bridge](#links)
+
+# Supported permission plugins
+* LuckPerms
+
+# Installation
+1. Install and configure [Minecraft-Linker](#links) and [WSC-Minecraft-Bridge](#links).
+2. Select the servers to sync groups on.
+3. Set online groups to set on your minecraft servers.
 
 # Links
 ## GitHub
