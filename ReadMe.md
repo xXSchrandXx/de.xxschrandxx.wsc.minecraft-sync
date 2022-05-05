@@ -15,7 +15,7 @@ This plugin syncs groups between WoltLab and Minecraft.
 # Installation
 1. Install and configure [Minecraft-Linker](#links) and [WSC-Minecraft-Bridge](#links).
 2. Select the servers to sync groups on.
-3. Set online groups to set on your minecraft servers.
+3. Set groups to set on your minecraft servers.
 
 # Links
 ## GitHub
