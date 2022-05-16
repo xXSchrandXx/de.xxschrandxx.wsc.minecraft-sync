@@ -10,12 +10,14 @@ This plugin syncs groups between WoltLab and Minecraft.
 * [Supported Permission Plugin](#supported-permission-plugins) installed on [WSC-Minecraft-Bridge](#links)
 
 # Supported permission plugins
-* LuckPerms
+You can find a list of supported plugins in the [PermissionPlugin enum](https://github.com/xXSchrandXx/WSC-Minecraft-Bridge/blob/main/src/main/java/de/xxschrandxx/wsc/core/permission/PermissionPlugin.java).
+Create an [Issue](https://github.com/xXSchrandXx/WSC-Minecraft-Bridge/issues/new) to request new permission plugins.
 
 # Installation
-1. Install and configure [Minecraft-Linker](#links) and [WSC-Minecraft-Bridge](#links).
-2. Select the servers to sync groups on.
-3. Set groups to set on your minecraft servers.
+1. Install and configure [Minecraft-Linker](#links).
+2. Install and configure [WSC-Minecraft-Bridge](#links). Enable the permission module.
+3. Select the servers to sync groups on.
+4. Set groups to set on your minecraft servers.
 
 # Links
 ## GitHub
