@@ -45,6 +45,7 @@ class MinecraftSyncSyncBackgroundJob extends AbstractBackgroundJob
                     MinecraftSyncHandler::getInstance()->syncMultiple($minecraftUsers);
                 }
                 // TODO fail on TooManyConnections in responses
+                // Queue multiple syncMultiple??
                 // Waiting until 5.5 update
             } else {
                 MinecraftSyncHandler::getInstance()->syncUser($this->userID, $this->unsetGroups);
