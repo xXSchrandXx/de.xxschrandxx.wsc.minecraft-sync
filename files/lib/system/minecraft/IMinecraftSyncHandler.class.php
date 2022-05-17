@@ -114,6 +114,43 @@ interface IMinecraftSyncHandler
     public function getWSCGroups();
 
     /**
+     * Synchronisiert die uuid und userID
+     * @param $uuid
+     * @param $userID
+     * @param $removeGroups
+     * @return array structure:
+     * Array
+     * (
+     *     'status' => $status
+     *     'statusCode' => $statusCode
+     * {If run successfully also:}
+     *     'added' => Array
+     *     (
+     *         $minecraftID => Array
+     *         (
+     *             $i => Array
+     *             (
+     *                 'status' => $status
+     *                 'statusCode' => $statusCode
+     *             )
+     *         )
+     *     )
+     *     'removed' => Array
+     *     (
+     *         $minecraftID => Array
+     *         (
+     *             $i => Array
+     *             (
+     *                 'status' => $statusMessage
+     *                 'statusCode' => $statusCode
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function sync(string $uuid, int $userID, array $removeGroups = []);
+
+    /**
      * Synchronisiert einen MinecraftUser
      * @param $minecraftUser
      * @param $removeGroups
@@ -147,7 +184,7 @@ interface IMinecraftSyncHandler
      *     )
      * )
      */
-    public function sync(MinecraftUser $minecraftUser, array $removeGroups = []);
+    public function syncMinecraftUser(MinecraftUser $minecraftUser, array $removeGroups = []);
 
     /**
      * Syncronisiert alle MinecraftUser des User mit der gegebenen ID.

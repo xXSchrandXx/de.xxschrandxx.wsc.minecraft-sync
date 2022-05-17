@@ -2,17 +2,34 @@
 
 namespace wcf\data\user\minecraft;
 
+use wcf\data\AbstractDatabaseObjectAction;
 use wcf\system\exception\PermissionDeniedException;
+use wcf\system\exception\UserInputException;
 use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
 
-class MinecraftUserSyncAction extends MinecraftUserAction
+class MinecraftUserSyncAction extends AbstractDatabaseObjectAction
 {
+    /**
+     * @inheritDoc
+     */
+    protected $className = MinecraftUserEditor::class;
+
     /**
      * list of permissions required sync objects
      * @var string[]
      */
     protected $permissionsSync = ['admin.minecraftSync.canManage'];
+
+    /**
+     * Returns a list of currently loaded objects.
+     *
+     * @return MinecraftUserEditor[]
+     */
+    public function getObjects()
+    {
+        return parent::getObjects();
+    }
 
     public function validateSync()
     {
@@ -22,14 +39,21 @@ class MinecraftUserSyncAction extends MinecraftUserAction
         } else {
             throw new PermissionDeniedException();
         }
+
+        if (empty($this->getObjects())) {
+            $this->readObjects();
+        }
+
+        if (empty($this->getObjects())) {
+            throw new UserInputException('objectID');
+        }
     }
 
     public function sync()
     {
         $response = [];
-        foreach ($this->getObjectIDs() as $objectID) {
-            $minecraftUser = new MinecraftUser($objectID);
-            $response[$objectID] = MinecraftSyncHandler::getInstance()->sync($minecraftUser);
+        foreach ($this->getObjects() as $editor) {
+            $response[$editor->getObjectID()] = MinecraftSyncHandler::getInstance()->sync($editor->minecraftUUID, $editor->userID);
         }
         return $response;
     }

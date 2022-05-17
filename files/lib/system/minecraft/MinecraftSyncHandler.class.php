@@ -343,7 +343,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 
         $responses = [];
         foreach ($minecraftUsers as $minecraftUserID => $minecraftUser) {
-            $responses[$minecraftUserID] = $this->sync($minecraftUser, $removeGroups);
+            $responses[$minecraftUserID] = $this->syncMinecraftUser($minecraftUser, $removeGroups);
         }
 
         return $responses;
@@ -352,11 +352,18 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     /**
      * @inheritDoc
      */
-    public function sync(MinecraftUser $minecraftUser, array $removeGroups = [])
+    public function syncMinecraftUser(MinecraftUser $minecraftUser, array $removeGroups = [])
     {
-        // 1. UUID & User
-        $uuid = $minecraftUser->minecraftUUID;
-        $user = new User($minecraftUser->userID);
+        return $this->sync($minecraftUser->minecraftUUID, $minecraftUser->userID, $removeGroups);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function sync(string $uuid, int $userID, array $removeGroups = [])
+    {
+        // 1. User
+        $user = new User($userID);
 
         // 2. Benutzergruppen vom WSC erhalten
         $wscGroups = $this->getWSCGroups();
