@@ -27,6 +27,30 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     }
 
     /**
+     * Calls methods on minecrafts and catches exceptions.
+     * @see AbstractMultipleMinecraftHandler#call
+     */
+    protected function callAndCatch(string $httpMethod, string $method = '', array $args = [], ?int $minecraftID = null)
+    {
+        try {
+            /** @var \Psr\Http\Message\ResponseInterface */
+            $response = $this->call($httpMethod, $method, $args, $minecraftID);
+            if ($response === null) {
+                throw new MinecraftException("Unknown server with id " . $minecraftID);
+            }
+            return JSON::decode($response->getBody());
+        } catch (GuzzleException | SystemException | MinecraftException $e) {
+            if (ENABLE_DEBUG_MODE) {
+                \wcf\functions\exception\logThrowable($e);
+            }
+            return [
+                'status' => $e->getMessage(),
+                'statusCode' => $e->getCode()
+            ];
+        }
+    }
+
+    /**
      * @inheritDoc
      */
     public function status(?int $minecraftID = null)
@@ -38,22 +62,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
             return $stati;
         } else {
-            try {
-                /** @var \Psr\Http\Message\ResponseInterface */
-                $response = $this->call('GET', 'permission/status', [], $minecraftID);
-                if ($response === null) {
-                    throw new MinecraftException("Could not get status of server with id " . $minecraftID);
-                }
-                return JSON::decode($response->getBody());
-            } catch (GuzzleException | SystemException | MinecraftException $e) {
-                if (ENABLE_DEBUG_MODE) {
-                    \wcf\functions\exception\logThrowable($e);
-                }
-                return [
-                    'status' => $e->getMessage(),
-                    'statusCode' => $e->getCode()
-                ];
-            }
+            return $this->callAndCatch('GET', 'permission/status', [], $minecraftID);
         }
     }
 
@@ -69,20 +78,17 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
             return $groups;
         } else {
-            try {
-                /** @var \Psr\Http\Message\ResponseInterface */
-                $response = $this->call('GET', 'permission/groupList', [], $minecraftID);
-                if ($response === null) {
-                    throw new MinecraftException("Could not get groups of server with id " . $minecraftID);
-                }
-                $responseBody = JSON::decode($response->getBody());
-                return $responseBody['groups'];
-            } catch (GuzzleException | SystemException | MinecraftException $e) {
-                if (ENABLE_DEBUG_MODE) {
-                    \wcf\functions\exception\logThrowable($e);
-                }
+            $response = $this->callAndCatch('GET', 'permission/groupList', [], $minecraftID);
+            if (!array_key_exists('statusCode', $response)) {
                 return [];
             }
+            if ($response['statusCode'] !== 200) {
+                return [];
+            }
+            if (!array_key_exists('groups', $response)) {
+                return [];
+            }
+            return $response['groups'];
         }
     }
 
@@ -98,22 +104,19 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
             return $playerGroups;
         } else {
-            try {
-                /** @var \Psr\Http\Message\ResponseInterface */
-                $response = $this->call('POST', 'permission/getUserGroups', [
-                    'uuid' => $uuid
-                ], $minecraftID);
-                if ($response === null) {
-                    throw new MinecraftException("Could not get user groups of " . $uuid . " on server with id " . $minecraftID);
-                }
-                $responseBody = JSON::decode($response->getBody());
-                return $responseBody['groups'];
-            } catch (GuzzleException | SystemException | MinecraftException $e) {
-                if (ENABLE_DEBUG_MODE) {
-                    \wcf\functions\exception\logThrowable($e);
-                }
-                return false;
+            $response = $this->callAndCatch('POST', 'permission/getUserGroups', [
+                'uuid' => $uuid
+            ], $minecraftID);
+            if (!array_key_exists('statusCode', $response)) {
+                return [];
             }
+            if ($response['statusCode'] !== 200) {
+                return [];
+            }
+            if (!array_key_exists('groups', $response)) {
+                return [];
+            }
+            return $response['groups'];
         }
     }
 
@@ -129,28 +132,16 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
             return $playerGroups;
         } else {
-            try {
-                // TODO limit post size
-                if (count($map) > 100) {
-                    $chunks = array_chunk($map, 100, true);
-                    $response = [];
-                    foreach ($chunks as $chunk) {
-                        $response += $this->getUsersGroups($chunk, $minecraftID);
-                    }
-                    return $response;
-                } else {
-                    /** @var \Psr\Http\Message\ResponseInterface */
-                    $response = $this->call('POST', 'permission/getUsersGroups', $map, $minecraftID);
-                    if ($response === null) {
-                        throw new MinecraftException("Could not get users groups on server with id " . $minecraftID);
-                    }
-                    return JSON::decode($response->getBody());
+            // TODO limit post size
+            if (count($map) > 100) {
+                $chunks = array_chunk($map, 100, true);
+                $response = [];
+                foreach ($chunks as $chunk) {
+                    $response += $this->getUsersGroups($chunk, $minecraftID);
                 }
-            } catch (GuzzleException | SystemException | MinecraftException $e) {
-                if (ENABLE_DEBUG_MODE) {
-                    \wcf\functions\exception\logThrowable($e);
-                }
-                return false;
+                return $response;
+            } else {
+                return $this->callAndCatch('POST', 'permission/getUsersGroups', $map, $minecraftID);
             }
         }
     }
@@ -167,25 +158,10 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
             return $responses;
         } else {
-            try {
-                /** @var \Psr\Http\Message\ResponseInterface */
-                $response = $this->call('POST', 'permission/addUserToGroup', [
-                    'uuid' => $uuid,
-                    'group' => $group
-                ], $minecraftID);
-                if ($response === null) {
-                    throw new MinecraftException("Could not add user " . $uuid . " to group " . $group . " on server with id " . $minecraftID);
-                }
-                return JSON::decode($response->getBody());
-            } catch (GuzzleException | SystemException | MinecraftException $e) {
-                if (ENABLE_DEBUG_MODE) {
-                    \wcf\functions\exception\logThrowable($e);
-                }
-                return [
-                    'status' => $e->getMessage(),
-                    'statusCode' => $e->getCode()
-                ];
-            }
+            return $this->callAndCatch('POST', 'permission/addUserToGroup', [
+                'uuid' => $uuid,
+                'group' => $group
+            ], $minecraftID);
         }
     }
 
@@ -201,31 +177,16 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
             return $responses;
         } else {
-            try {
-                // TODO limit post size
-                if (count($map) > 100) {
-                    $chunks = array_chunk($map, 100, true);
-                    $response = [];
-                    foreach ($chunks as $chunk) {
-                        $response += $this->addUsersToGroups($chunk, $minecraftID);
-                    }
-                    return $response;
-                } else {
-                    /** @var \Psr\Http\Message\ResponseInterface */
-                    $response = $this->call('POST', 'permission/addUsersToGroups', $map, $minecraftID);
-                    if ($response === null) {
-                        throw new MinecraftException("Could not add users to groups on server with id " . $minecraftID);
-                    }
-                        return JSON::decode($response->getBody());
+            // TODO limit post size
+            if (count($map) > 100) {
+                $chunks = array_chunk($map, 100, true);
+                $response = [];
+                foreach ($chunks as $chunk) {
+                    $response += $this->addUsersToGroups($chunk, $minecraftID);
                 }
-            } catch (GuzzleException | SystemException | MinecraftException $e) {
-                if (ENABLE_DEBUG_MODE) {
-                    \wcf\functions\exception\logThrowable($e);
-                }
-                return [
-                    'status' => $e->getMessage(),
-                    'statusCode' => $e->getCode()
-                ];
+                return $response;
+            } else {
+                return $this->callAndCatch('POST', 'permission/addUsersToGroups', $map, $minecraftID);
             }
         }
     }
@@ -242,25 +203,10 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
             return $responses;
         } else {
-            try {
-                /** @var \Psr\Http\Message\ResponseInterface */
-                $response = $this->call('POST', 'permission/removeUserFromGroup', [
-                    'uuid' => $uuid,
-                    'group' => $group
-                ], $minecraftID);
-                if ($response === null) {
-                    throw new MinecraftException("Could not remove user " . $uuid . " from group " . $group . " on server with id " . $minecraftID);
-                }
-                return JSON::decode($response->getBody());
-            } catch (GuzzleException | SystemException | MinecraftException $e) {
-                if (ENABLE_DEBUG_MODE) {
-                    \wcf\functions\exception\logThrowable($e);
-                }
-                return [
-                    'status' => $e->getMessage(),
-                    'statusCode' => $e->getCode()
-                ];
-            }
+            return $this->callAndCatch('POST', 'permission/removeUserFromGroup', [
+                'uuid' => $uuid,
+                'group' => $group
+            ], $minecraftID);
         }
     }
 
@@ -276,31 +222,16 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
             return $responses;
         } else {
-            try {
-                // TODO limit post size
-                if (count($map) > 100) {
-                    $chunks = array_chunk($map, 100, true);
-                    $response = [];
-                    foreach ($chunks as $chunk) {
-                        $response += $this->getUsersGroups($chunk, $minecraftID);
-                    }
-                    return $response;
-                } else {
-                    /** @var \Psr\Http\Message\ResponseInterface */
-                    $response = $this->call('POST', 'permission/removeUsersFromGroups', $map, $minecraftID);
-                    if ($response === null) {
-                        throw new MinecraftException("Could not remove users from groups on server with id " . $minecraftID);
-                    }
-                    return JSON::decode($response->getBody());
+            // TODO limit post size
+            if (count($map) > 100) {
+                $chunks = array_chunk($map, 100, true);
+                $response = [];
+                foreach ($chunks as $chunk) {
+                    $response += $this->getUsersGroups($chunk, $minecraftID);
                 }
-            } catch (GuzzleException | SystemException | MinecraftException $e) {
-                if (ENABLE_DEBUG_MODE) {
-                    \wcf\functions\exception\logThrowable($e);
-                }
-                return [
-                    'status' => $e->getMessage(),
-                    'statusCode' => $e->getCode()
-                ];
+                return $response;
+            } else {
+                return $this->callAndCatch('POST', 'permission/removeUsersFromGroups', $map, $minecraftID);
             }
         }
     }
@@ -429,13 +360,6 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
          * @var false|array
          */
         $minecraftHasGroups = $this->getUserGroups($uuid);
-
-        if ($minecraftHasGroups === false) {
-            return [
-                'status' => 'Could not get minecraft groups.',
-                'statusCode' => 500
-            ];
-        }
 
         // 7. Benutzergruppen vom Minecraft-Server filtern.
         /**
@@ -570,8 +494,6 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
          * @var array
          */
         $response = [
-            'status' => 'OK',
-            'statusCode' => 200,
             'added' => [],
             'removed' => []
         ];
@@ -662,6 +584,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
      */
     public function syncAll(array $removeGroups = [])
     {
+        // TODO Add backgroundjob and syncMultiple
 
         $minecraftUserList = new MinecraftUserList();
         $minecraftUserList->readObjects();
@@ -941,8 +864,6 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 //        wcfDebug($needToAdd, $needToRemove);
 
         $response = [
-            'status' => 'OK',
-            'statusCode' => 200,
             'added' => [],
             'removed' => []
         ];
@@ -957,6 +878,6 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             $response['removed'][$minecraftID] = $this->removeUsersFromGroups($map, $minecraftID);
         }
 
-        return $response;
+        return wcfDebug($response);
     }
 }

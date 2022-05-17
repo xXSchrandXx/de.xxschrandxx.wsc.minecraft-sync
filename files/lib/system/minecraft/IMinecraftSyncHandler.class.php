@@ -8,7 +8,6 @@ interface IMinecraftSyncHandler
 {
     /**
      * Gibt den status des Minecraft-Servers wieder.
-     * If a {@link GuzzleException} happens or a {@link JSON#decode($json, $asArray = true)} throws a {@link SystemException} the response will be false.
      * @param $minecraftID
      * @return array
      */
@@ -16,17 +15,15 @@ interface IMinecraftSyncHandler
 
     /**
      * Gibt die Gruppen auf den Minecraft-Server(n) wieder.
-     * If a {@link GuzzleException} happens or a {@link JSON#decode($json, $asArray = true)} throws a {@link SystemException} the response will be false.
      * @return array
      */
     public function groupList(?int $minecraftID = null);
 
     /**
      * Gibt die Gruppen des Spieler auf den Minecraft-Server(n) wieder.
-     * If a {@link GuzzleException} happens or a {@link JSON#decode($json, $asArray = true)} throws a {@link SystemException} the response will be false.
      * @param $uuid
      * @param $minecraftID
-     * @return array|false
+     * @return array
      */
     public function getUserGroups(string $uuid, ?int $minecraftID = null);
 
@@ -38,7 +35,7 @@ interface IMinecraftSyncHandler
      *     $uuid
      * )
      * @param $minecraftID
-     * @return array|false structure:
+     * @return array structure:
      * Array
      * (
      *     $minecraftID => Array
