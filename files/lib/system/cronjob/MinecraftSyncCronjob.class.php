@@ -2,7 +2,6 @@
 
 namespace wcf\system\cronjob;
 
-use DateInterval;
 use wcf\data\cronjob\Cronjob;
 use wcf\data\user\minecraft\MinecraftUserList;
 use wcf\system\minecraft\MinecraftSyncHandler;

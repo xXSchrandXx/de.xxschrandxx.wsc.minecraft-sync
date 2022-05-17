@@ -4,7 +4,6 @@ namespace wcf\system\event\listener;
 
 use wcf\system\background\BackgroundQueueHandler;
 use wcf\system\background\job\MinecraftSyncDeleteBackgroundJob;
-use wcf\data\user\UserAction;
 
 class MinecraftSyncUserDeleteListener implements IParameterizedEventListener
 {
