@@ -629,10 +629,6 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         if (WCF::benchmarkIsEnabled()) {
             $bmIndex = Benchmark::getInstance()->start("BEGIN");
         }
-        /*
-         * TODO Add backgroundjob and syncMultiple
-         * add lastSync per MinecraftUser and get last 100 latest
-         */
 
          // 1. UUID & User
         /**

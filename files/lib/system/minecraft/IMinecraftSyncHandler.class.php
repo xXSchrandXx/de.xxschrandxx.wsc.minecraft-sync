@@ -232,6 +232,7 @@ interface IMinecraftSyncHandler
      * Synchronisiert alle MinecraftUser
      * @param array $removeGroups
      * @return array
+     * @deprecated Use syncMultiple because this method can timeout fast
      */
     public function syncAll(array $removeGroups = []);
 

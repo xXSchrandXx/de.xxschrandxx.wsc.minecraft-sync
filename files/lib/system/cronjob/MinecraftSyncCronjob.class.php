@@ -21,7 +21,9 @@ class MinecraftSyncCronjob extends AbstractCronjob
         }
         $minecraftUserList = new MinecraftUserList();
         $lastDay = TIME_NOW - 24 * 60 * 60 * 1000;
-        $minecraftUserList->getConditionBuilder()->add('`lastSync` < (?) ORDER BY `lastSync` ASC LIMIT 100', [$lastDay]);
+        $minecraftUserList->sqlOrderBy = 'lastSync ASC';
+        $minecraftUserList->sqlLimit = 100;
+        $minecraftUserList->getConditionBuilder()->add('lastSync < ?', [$lastDay]);
         $minecraftUserList->readObjects();
         $minecraftUsers = $minecraftUserList->getObjects();
         if (!empty($minecraftUsers)) {
