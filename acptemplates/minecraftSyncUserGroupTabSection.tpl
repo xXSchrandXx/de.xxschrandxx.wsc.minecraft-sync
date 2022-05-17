@@ -1,11 +1,11 @@
-<dl>
+<dl class="{'minecraftGroupNames-'|concat:$minecraftID}{if $errorField == 'minecraftGroupNames-'|concat:$minecraftID} formError{/if}">
 	<dt>
-		<label for="minecraftGroupNames-{$minecraftID}">
+		<label for="{'minecraftGroupNames-'|concat:$minecraftID}">
 			{lang}wcf.page.groupAddSection.minecraftSync.minecraftGroupNames{/lang}
 		</label>
 	</dt>
 	<dd>
-		<ul class="scrollableCheckboxList" id="minecraftGroupNames-{$minecraftID}" style="height: 200px;">
+		<ul class="scrollableCheckboxList" id="{'minecraftGroupNames-'|concat:$minecraftID}" style="height: 200px;">
 			{foreach from=$minecraftGroupNames[$minecraftID] item=minecraftGroupName}
 				<li>
 					<label>
@@ -19,6 +19,9 @@
 				</li>
 			{/foreach}
 		</ul>
+		{if $errorField == 'minecraftGroupNames-'|concat:$minecraftID}
+			<small>{lang}wcf.page.groupAddSection.minecraftSync.error.{$errorType}{/lang}</small>
+		{/if}
 		<small>{lang}wcf.page.groupAddSection.minecraftSync.minecraftGroupName.description{/lang}</small>
 	</dd>
 </dl>

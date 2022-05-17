@@ -47,40 +47,57 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     /**
      * @see \wcf\form\AbstractForm::validate()
      */
-    public function validate(/** @var UserGroupAddForm */$eventObj)
+    public function validate(\wcf\acp\form\UserGroupAddForm $eventObj)
     {
         /** @var MinecraftSyncHandler */
         $handler = MinecraftSyncHandler::getInstance();
         $groups = $handler->groupList();
         foreach ($this->minecraftGroups as $minecraftID => $groupNames) {
-            if (!array_key_exists($minecraftID, $groups)) {
-                throw new UserInputException('minecraftGroupNames', "Don't know '$minecraftID'.");
-            }
-            foreach ($groupNames as $groupName) {
-                if (!in_array($groupName, $groups[$minecraftID])) {
-                    throw new UserInputException('minecraftGroupNames', "Group '$groupName' does not exist on Server with id '$minecraftID'.");
+            try {
+                if (!array_key_exists($minecraftID, $groups)) {
+                    throw new UserInputException('minecraftGroupNames-' . $minecraftID, 'unknownMinecraftID', ['minecraftID' => $minecraftID]);
                 }
+                foreach ($groupNames as $groupName) {
+                    if (!in_array($groupName, $groups[$minecraftID])) {
+                        throw new UserInputException('minecraftGroupNames-' . $minecraftID, 'unknownGroupName', ['minecraftID' => $minecraftID, 'minecraftGroupName' => $groupName]);
+                    }
+                }
+            } catch (UserInputException $e) {
+                $eventObj->errorField = $e->getField();
+                $eventObj->errorType[$e->getField()] = $e->getType();
+                throw $e;
             }
         }
     }
 
     /**
+     * Removes old (now unmanaged) groups from minecraftserver.
      * @see \wcf\form\AbstractForm::save()
      */
     public function save(/** @var UserGroupAddForm */$eventObj)
     {
         if (MINECRAFT_SYNC_ENABLED) {
+            // Check weather this is the first sync
             if ($eventObj instanceof UserGroupEditForm) {
+                /**
+                 * List of old data for 'minecraftGroups'
+                 * @var array
+                 */
                 $oldMinecraftGroups = [];
                 try {
                     $oldMinecraftGroups = JSON::decode($eventObj->group->minecraftGroups);
                 } catch (SystemException $e) {
                 }
 
+                // Setting new 'minecraftGroups'
                 $eventObj->additionalFields = array_merge($eventObj->additionalFields, [
                     'minecraftGroups' => JSON::encode($this->minecraftGroups)
                 ]);
 
+                /**
+                 * List removed 'minecraftGroups'
+                 * @var array
+                 */
                 $diff = [];
                 foreach ($oldMinecraftGroups as $minecraftID => $groupNames) {
                     if (array_key_exists($minecraftID, $this->minecraftGroups)) {

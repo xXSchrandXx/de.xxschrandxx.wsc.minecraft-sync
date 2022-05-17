@@ -17,6 +17,8 @@
 		<item name="wcf.page.groupAddSection.minecraftSync.minecraftGroupNames"><![CDATA[Groups]]></item>
 		<item name="wcf.page.groupAddSection.minecraftSync.minecraftGroupName.description"><![CDATA[Selected groups are synchronized on the server.]]></item>
 		<item name="wcf.page.groupAddSection.minecraftSync.sectionTitle"><![CDATA[Minecraft-Sync]]></item>
+		<item name="wcf.page.groupAddSection.minecraftSync.error.unknownMinecraftID"><![CDATA[Unknown minecraft with id <code>{$minecraftID}</code>]]></item>
+		<item name="wcf.page.groupAddSection.minecraftSync.error.unknownGroupName"><![CDATA[Unknown group for Server with id <code>{$minecraftID}</code>.]]></item>
 	</category>
 	<category name="wcf.page.minecraftSyncUserAdd">
 		<item name="wcf.page.minecraftSyncUserAdd.button.status"><![CDATA[Status]]></item>
