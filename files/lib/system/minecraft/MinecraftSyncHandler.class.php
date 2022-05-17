@@ -5,12 +5,14 @@ namespace wcf\system\minecraft;
 use GuzzleHttp\Exception\GuzzleException;
 use wcf\data\user\group\UserGroupList;
 use wcf\data\user\minecraft\MinecraftUser;
+use wcf\data\user\minecraft\MinecraftUserEditor;
 use wcf\data\user\minecraft\MinecraftUserList;
 use wcf\data\user\User;
 use wcf\data\user\UserList;
 use wcf\system\benchmark\Benchmark;
 use wcf\system\exception\MinecraftException;
 use wcf\system\exception\SystemException;
+use wcf\system\exception\UserInputException;
 use wcf\system\WCF;
 use wcf\util\JSON;
 use wcf\util\StringUtil;
@@ -276,7 +278,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 
         $responses = [];
         foreach ($minecraftUsers as $minecraftUserID => $minecraftUser) {
-            $responses[$minecraftUserID] = $this->syncMinecraftUser($minecraftUser, $removeGroups);
+            $responses[$minecraftUserID] = $this->sync($minecraftUser, $removeGroups);
         }
 
         return $responses;
@@ -285,15 +287,22 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     /**
      * @inheritDoc
      */
-    public function syncMinecraftUser(MinecraftUser $minecraftUser, array $removeGroups = [])
+    public function syncMinecraftUUID(string $uuid, array $removeGroups = [])
     {
-        return $this->sync($minecraftUser->minecraftUUID, $minecraftUser->userID, $removeGroups);
+        $minecraftUserList = new MinecraftUserList();
+        $minecraftUserList->getConditionBuilder()->add('minecraftUUID = ?', [$uuid]);
+        $minecraftUserList->readObjects();
+        $minecraftUsers = $minecraftUserList->getObjects();
+        if (empty($minecraftUsers)) {
+            throw new UserInputException();
+        }
+        return $this->sync($minecraftUsers[1], $removeGroups);
     }
 
     /**
      * @inheritDoc
      */
-    public function sync(string $uuid, int $userID, array $removeGroups = [])
+    public function sync(MinecraftUser $minecraftUser, array $removeGroups = [])
     {
         $bmIndex = null;
         if (WCF::benchmarkIsEnabled()) {
@@ -301,7 +310,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         }
 
         // 1. User
-        $user = new User($userID);
+        $user = new User($minecraftUser->userID);
 
         // 2. Benutzergruppen vom WSC erhalten
         $wscGroups = $this->getWSCGroups();
@@ -366,7 +375,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
          * )
          * @var false|array
          */
-        $minecraftHasGroups = $this->getUserGroups($uuid);
+        $minecraftHasGroups = $this->getUserGroups($minecraftUser->minecraftUUID);
 
         // 7. Benutzergruppen vom Minecraft-Server filtern.
         /**
@@ -509,9 +518,9 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         foreach ($needToAdd as $minecraftID => $groups) {
             foreach ($groups as $group) {
                 if (array_key_exists($minecraftID, $response['added'])) {
-                    $response['added'][$minecraftID] += $this->addUserToGroup($uuid, $group, $minecraftID);
+                    $response['added'][$minecraftID] += $this->addUserToGroup($minecraftUser->minecraftUUID, $group, $minecraftID);
                 } else {
-                    $response['added'][$minecraftID] = [$this->addUserToGroup($uuid, $group, $minecraftID)];
+                    $response['added'][$minecraftID] = [$this->addUserToGroup($minecraftUser->minecraftUUID, $group, $minecraftID)];
                 }
             }
         }
@@ -520,12 +529,16 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         foreach ($needToRemove as $minecraftID => $groups) {
             foreach ($groups as $group) {
                 if (array_key_exists($minecraftID, $response['removed'])) {
-                    $response['removed'][$minecraftID] += $this->removeUserFromGroup($uuid, $group, $minecraftID);
+                    $response['removed'][$minecraftID] += $this->removeUserFromGroup($minecraftUser->minecraftUUID, $group, $minecraftID);
                 } else {
-                    $response['removed'][$minecraftID] = [$this->removeUserFromGroup($uuid, $group, $minecraftID)];
+                    $response['removed'][$minecraftID] = [$this->removeUserFromGroup($minecraftUser->minecraftUUID, $group, $minecraftID)];
                 }
             }
         }
+
+        // 12 lastSync setzen
+        $editor = new MinecraftUserEditor($minecraftUser);
+        $editor->update(['lastSync' => TIME_NOW]);
 
         if ($bmIndex !== null) {
             /**
@@ -602,6 +615,16 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
      */
     public function syncAll(array $removeGroups = [])
     {
+        $minecraftUserList = new MinecraftUserList();
+        $minecraftUserList->readObjects();
+        return $this->syncMultiple($minecraftUserList->getObjects());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function syncMultiple(array $minecraftUsers, array $removeGroups = [])
+    {
         $bmIndex = null;
         if (WCF::benchmarkIsEnabled()) {
             $bmIndex = Benchmark::getInstance()->start("BEGIN");
@@ -611,11 +634,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
          * add lastSync per MinecraftUser and get last 100 latest
          */
 
-        $minecraftUserList = new MinecraftUserList();
-        $minecraftUserList->readObjects();
-        $minecraftUsers = $minecraftUserList->getObjects();
-
-        // 1. UUID & User
+         // 1. UUID & User
         /**
          * Array
          * (
@@ -901,6 +920,12 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         // 11 Gruppen entfernen
         foreach ($needToRemove as $minecraftID => $map) {
             $response['removed'][$minecraftID] = $this->removeUsersFromGroups($map, $minecraftID);
+        }
+
+        // 12 lastSync setzen
+        foreach ($minecraftUsers as $minecraftUser) {
+            $editor = new MinecraftUserEditor($minecraftUser);
+            $editor->update(['lastSync' => TIME_NOW]);
         }
 
         if ($bmIndex !== null) {

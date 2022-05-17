@@ -8,33 +8,34 @@ interface IMinecraftSyncHandler
 {
     /**
      * Gibt den status des Minecraft-Servers wieder.
-     * @param $minecraftID
+     * @param ?int $minecraftID
      * @return array
      */
     public function status(?int $minecraftID = null);
 
     /**
      * Gibt die Gruppen auf den Minecraft-Server(n) wieder.
+     * @param ?int $minecraftID
      * @return array
      */
     public function groupList(?int $minecraftID = null);
 
     /**
      * Gibt die Gruppen des Spieler auf den Minecraft-Server(n) wieder.
-     * @param $uuid
-     * @param $minecraftID
+     * @param string $uuid
+     * @param ?int $minecraftID
      * @return array
      */
     public function getUserGroups(string $uuid, ?int $minecraftID = null);
 
     /**
      * Gibt alle Gruppen aller Spieler auf den Minecraft-Server(n) wieder.
-     * @param $map strucutre:
+     * @param array $map strucutre:
      * Array
      * (
      *     $uuid
      * )
-     * @param $minecraftID
+     * @param ?int $minecraftID
      * @return array structure:
      * Array
      * (
@@ -48,9 +49,9 @@ interface IMinecraftSyncHandler
 
     /**
      * Fügt den Spieler auf den Minecraft-Server(n) in die Gruppe hinzu.
-     * @param $uuid
-     * @param $group
-     * @param $minecraftID
+     * @param string $uuid
+     * @param string $group
+     * @param ?int $minecraftID
      * @return array
      */
     public function addUserToGroup(string $uuid, string $group, ?int $minecraftID = null);
@@ -72,16 +73,16 @@ interface IMinecraftSyncHandler
 
     /**
      * Entfernt den Spieler auf den Minecraft-Server(n) aus der Gruppe.
-     * @param $uuid
-     * @param $group
-     * @param $minecraftID
+     * @param string $uuid
+     * @param string $group
+     * @param ?int $minecraftID
      * @return array
      */
     public function removeUserFromGroup(string $uuid, string $group, ?int $minecraftID = null);
 
     /**
      * Entfernt alle Spieler auf den Minecraft-Server(n) aus den Gruppen.
-     * @param $map structure:
+     * @param array $map structure:
      * Array
      * (
      *     $minecraftUUID => Array
@@ -89,7 +90,7 @@ interface IMinecraftSyncHandler
      *         $id => $groupName
      *     )
      * )
-     * @param $minecraftID
+     * @param ?int $minecraftID
      * @return array
      */
     public function removeUsersFromGroups(array $map, ?int $minecraftID = null);
@@ -112,9 +113,8 @@ interface IMinecraftSyncHandler
 
     /**
      * Synchronisiert die uuid und userID
-     * @param $uuid
-     * @param $userID
-     * @param $removeGroups
+     * @param string $uuid
+     * @param array $removeGroups
      * @return array structure:
      * Array
      * (
@@ -145,12 +145,12 @@ interface IMinecraftSyncHandler
      *     )
      * )
      */
-    public function sync(string $uuid, int $userID, array $removeGroups = []);
+    public function syncMinecraftUUID(string $uuid, array $removeGroups = []);
 
     /**
      * Synchronisiert einen MinecraftUser
-     * @param $minecraftUser
-     * @param $removeGroups
+     * @param MinecraftUser $minecraftUser
+     * @param array $removeGroups
      * @return array structure:
      * Array
      * (
@@ -181,12 +181,12 @@ interface IMinecraftSyncHandler
      *     )
      * )
      */
-    public function syncMinecraftUser(MinecraftUser $minecraftUser, array $removeGroups = []);
+    public function sync(MinecraftUser $minecraftUser, array $removeGroups = []);
 
     /**
      * Syncronisiert alle MinecraftUser des User mit der gegebenen ID.
-     * @param $userID
-     * @param $removeGroups
+     * @param int $userID
+     * @param array $removeGroups
      * @return array structure:
      * Array
      * (
@@ -224,13 +224,22 @@ interface IMinecraftSyncHandler
 
     /**
      * Entfernt einen MinecraftUser.
-     * @param $minecraftUser
+     * @param MinecraftUser $minecraftUser
      */
     public function delete(MinecraftUser $minecraftUser);
 
     /**
      * Synchronisiert alle MinecraftUser
-     * @param $removeGroups
+     * @param array $removeGroups
+     * @return array
      */
     public function syncAll(array $removeGroups = []);
+
+    /**
+     * Synchronisiert mehrere MinecraftUser
+     * @param MinecraftUser[] $minecraftUsers
+     * @param array $removeGroups
+     * @return array
+     */
+    public function syncMultiple(array $minecraftUsers, array $removeGroups = []);
 }
