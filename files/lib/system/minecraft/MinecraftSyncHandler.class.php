@@ -11,6 +11,7 @@ use wcf\data\user\UserList;
 use wcf\system\benchmark\Benchmark;
 use wcf\system\exception\MinecraftException;
 use wcf\system\exception\SystemException;
+use wcf\system\WCF;
 use wcf\util\JSON;
 use wcf\util\StringUtil;
 
@@ -294,35 +295,21 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
      */
     public function sync(string $uuid, int $userID, array $removeGroups = [])
     {
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("BEGIN");
+        $bmIndex = null;
+        if (WCF::benchmarkIsEnabled()) {
+            $bmIndex = Benchmark::getInstance()->start("BEGIN");
         }
 
         // 1. User
         $user = new User($userID);
 
         // 2. Benutzergruppen vom WSC erhalten
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("COMMIT getting 'WSCGroups'");
-        }
         $wscGroups = $this->getWSCGroups();
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("SAVE POINT got 'WSCGroups'");
-        }
 
         // 3. Liste alle Gruppen des Benutzers auf
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("COMMIT getting 'groupIDs'");
-        }
         $userGroupIDs = $user->getGroupIDs();
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("SAVE POINT got 'groupIDs'");
-        }
 
         // 4. Auflisten welche Gruppen der Benutzer haben sollte
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("COMMIT getting 'shouldHave'");
-        }
         /**
          * Array
          * (
@@ -343,14 +330,8 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 }
             }
         }
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("SAVE POINT got 'shouldHave'");
-        }
 
         // 5. Auflisten welche Gruppen der Benutzer nicht haben sollte
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("COMMIT getting 'shouldNotHave'");
-        }
         /**
          * Array
          * (
@@ -371,16 +352,10 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 }
             }
         }
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("SAVE POINT got 'shouldHave'");
-        }
 
 //        wcfDebug($shouldHave, $shouldNotHave);
 
         // 6. Benutzergruppen von Minecraft-Servern erhalten
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("COMMIT getting 'minecraftHasGroups'");
-        }
         /**
          * Array
          * (
@@ -392,14 +367,8 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
          * @var false|array
          */
         $minecraftHasGroups = $this->getUserGroups($uuid);
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("SAVE POINT got 'minecraftHasGroups'");
-        }
 
         // 7. Benutzergruppen vom Minecraft-Server filtern.
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("COMMIT getting 'minecraftHasGroupsFiltered'");
-        }
         /**
          * Array
          * (
@@ -435,16 +404,10 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 }
             }
         }
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("SAVE POINT got 'minecraftHasGroupsFiltered'");
-        }
 
 //        wcfDebug($minecraftHasGroups, $minecraftHasGroupsFiltered);
 
         // 8. Gruppen müssen hinzugefügt werden
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("COMMIT getting 'needToAdd'");
-        }
         /**
          * Array
          * (
@@ -475,14 +438,8 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 }
             }
         }
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("SAVE POINT got 'needToAdd'");
-        }
 
         // 9. Gruppen müssen entfernt werden
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("COMMIT getting 'needToRemove'");
-        }
         /**
          * Array
          * (
@@ -509,9 +466,6 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                     }
                 }
             }
-        }
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("SAVE POINT got 'needToRemove'");
         }
 
 //        wcfDebug($needToAdd, $needToRemove);
@@ -552,9 +506,6 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         ];
 
         // 10 Gruppen hinzufügen
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("COMMIT adding groups");
-        }
         foreach ($needToAdd as $minecraftID => $groups) {
             foreach ($groups as $group) {
                 if (array_key_exists($minecraftID, $response['added'])) {
@@ -564,14 +515,8 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 }
             }
         }
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("SAVE POINT added groups");
-        }
 
         // 11 Gruppen entfernen
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("COMMIT removing groups");
-        }
         foreach ($needToRemove as $minecraftID => $groups) {
             foreach ($groups as $group) {
                 if (array_key_exists($minecraftID, $response['removed'])) {
@@ -581,12 +526,17 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                 }
             }
         }
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->start("SAVE POINT removed groups");
-        }
 
-        if (ENABLE_BENCHMARK) {
-            Benchmark::getInstance()->stop();
+        if ($bmIndex !== null) {
+            /**
+             * @var Benchmark
+             */
+            $bm = Benchmark::getInstance();
+            $response['benchmark'] = [
+                'ExecutionTime' => $bm->getExecutionTime(),
+                'MemoryUsage' => $bm->getMemoryUsage()
+            ];
+            $bm->stop($bmIndex);
         }
         return $response;
     }
@@ -652,7 +602,14 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
      */
     public function syncAll(array $removeGroups = [])
     {
-        // TODO Add backgroundjob and syncMultiple
+        $bmIndex = null;
+        if (WCF::benchmarkIsEnabled()) {
+            $bmIndex = Benchmark::getInstance()->start("BEGIN");
+        }
+        /*
+         * TODO Add backgroundjob and syncMultiple
+         * add lastSync per MinecraftUser and get last 100 latest
+         */
 
         $minecraftUserList = new MinecraftUserList();
         $minecraftUserList->readObjects();
@@ -946,6 +903,14 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             $response['removed'][$minecraftID] = $this->removeUsersFromGroups($map, $minecraftID);
         }
 
-        return wcfDebug($response);
+        if ($bmIndex !== null) {
+            $bm = Benchmark::getInstance();
+            $bm->stop($bmIndex);
+            $response['benchmark'] = [
+                'ExecutionTime' => $bm->getExecutionTime(),
+                'MemoryUsage' => $bm->getMemoryUsage()
+            ];
+        }
+        return $response;
     }
 }
