@@ -7,11 +7,10 @@
 	<category name="wcf.acp.option">
 		<item name="wcf.acp.option.category.minecraft_sync"><![CDATA[Minecraft-Sync]]></item>
 		<item name="wcf.acp.option.category.minecraft_sync_general"><![CDATA[Allgemeine Einstellungen]]></item>
-		<item name="wcf.acp.option.category.minecraft_linker_password"><![CDATA[Authentifizierung]]></item>
 		<item name="wcf.acp.option.minecraft_sync_enabled"><![CDATA[Aktiviert]]></item>
 		<item name="wcf.acp.option.minecraft_sync_identity"><![CDATA[Server]]></item>
-		<item name="wcf.acp.option.minecraft_linker_password_enabled"><![CDATA[Aktiviert]]></item>
-		<item name="wcf.acp.option.minecraft_linker_password_key"><![CDATA[Schlüssel]]></item>
+		<item name="wcf.acp.option.minecraft_sync_entries_per_call"><![CDATA[Maximale Call Einträge]]></item>
+		<item name="wcf.acp.option.minecraft_sync_entries_per_call.description"><![CDATA[Wenn dieser Wert zu hoch gesetzt wird, droht ein timeout beim synchronisieren.]]></item>
 	</category>
 	<category name="wcf.page.groupAddSection">
 		<item name="wcf.page.groupAddSection.minecraftSync.minecraftGroupNames"><![CDATA[Guppen]]></item>

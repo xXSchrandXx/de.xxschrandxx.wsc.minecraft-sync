@@ -229,6 +229,13 @@ interface IMinecraftSyncHandler
     public function delete(MinecraftUser $minecraftUser);
 
     /**
+     * Synchronisiert die MinecraftUser mit kleinsten `lastSync`.
+     * @param array $removeGroups
+     * @return array
+     */
+    public function syncLatest(array $removeGroups = []);
+
+    /**
      * Synchronisiert alle MinecraftUser
      * @param array $removeGroups
      * @return array

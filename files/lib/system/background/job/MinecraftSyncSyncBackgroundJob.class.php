@@ -4,6 +4,7 @@ namespace wcf\system\background\job;
 
 use wcf\data\user\minecraft\MinecraftUserList;
 use wcf\system\background\job\AbstractBackgroundJob;
+use wcf\system\minecraft\MinecraftHandler;
 use wcf\system\minecraft\MinecraftSyncHandler;
 
 class MinecraftSyncSyncBackgroundJob extends AbstractBackgroundJob
@@ -33,25 +34,17 @@ class MinecraftSyncSyncBackgroundJob extends AbstractBackgroundJob
     public function perform()
     {
         if (MINECRAFT_SYNC_ENABLED) {
-            if ($this->userID === null) {
-                $minecraftUserList = new MinecraftUserList();
-                $lastDay = TIME_NOW - 24 * 60 * 60 * 1000;
-                $minecraftUserList->sqlOrderBy = 'lastSync ASC';
-                $minecraftUserList->sqlLimit = 100;
-                $minecraftUserList->getConditionBuilder()->add('lastSync < ?', [$lastDay]);
-                $minecraftUserList->readObjects();
-                $minecraftUsers = $minecraftUserList->getObjects();
-                if (!empty($minecraftUsers)) {
-                    MinecraftSyncHandler::getInstance()->syncMultiple($minecraftUsers);
-                }
-                // TODO fail on TooManyConnections in responses
-                // Queue multiple syncMultiple??
-                // Waiting until 5.5 update
-            } else {
-                MinecraftSyncHandler::getInstance()->syncUser($this->userID, $this->unsetGroups);
-                // TODO fail on TooManyConnections in responses
-                // Waiting until 5.5 update
-            }
+            return;
+        }
+        if ($this->userID === null) {
+            MinecraftSyncHandler::getInstance()->syncLatest();
+            // TODO fail on TooManyConnections in responses
+            // Queue multiple syncMultiple??
+            // Waiting until 5.5 update
+        } else {
+            MinecraftSyncHandler::getInstance()->syncUser($this->userID, $this->unsetGroups);
+            // TODO fail on TooManyConnections in responses
+            // Waiting until 5.5 update
         }
     }
 }

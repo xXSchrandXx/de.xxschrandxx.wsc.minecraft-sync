@@ -30,10 +30,11 @@ class MinecraftSyncDeleteBackgroundJob extends AbstractBackgroundJob
      */
     public function perform()
     {
-        if (MINECRAFT_SYNC_ENABLED) {
-            $responses = MinecraftSyncHandler::getInstance()->delete($this->minecraftUser);
-            // TODO fail on TooManyConnections in responses
-            // Waiting until 5.5 update
+        if (!MINECRAFT_SYNC_ENABLED) {
+            return;
         }
+        $responses = MinecraftSyncHandler::getInstance()->delete($this->minecraftUser);
+        // TODO fail on TooManyConnections in responses
+        // Waiting until 5.5 update
     }
 }

@@ -15,11 +15,16 @@
 				<categoryname>minecraft_sync_general</categoryname>
 				<optiontype>boolean</optiontype>
 				<defaultvalue>1</defaultvalue>
-				<enableoptions>minecraft_sync_identity</enableoptions>
+				<enableoptions>minecraft_sync_identity,minecraft_sync_entries_per_call</enableoptions>
 			</option>
 			<option name="minecraft_sync_identity">
 				<categoryname>minecraft_sync_general</categoryname>
 				<optiontype>MinecraftConnectionMultiSelect</optiontype>
+			</option>
+			<option name="minecraft_sync_entries_per_call">
+				<categoryname>minecraft_sync_general</categoryname>
+				<optiontype>integer</optiontype>
+				<defaultvalue>100</defaultvalue>
 			</option>
 		</options>
 	</import>

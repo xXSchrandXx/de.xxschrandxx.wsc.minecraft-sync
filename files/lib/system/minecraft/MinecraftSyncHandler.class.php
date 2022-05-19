@@ -136,9 +136,8 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
             return $playerGroups;
         } else {
-            // TODO limit post size
-            if (count($map) > 100) {
-                $chunks = array_chunk($map, 100, true);
+            if (count($map) > MINECRAFT_SYNC_ENTRIES_PER_CALL) {
+                $chunks = array_chunk($map, MINECRAFT_SYNC_ENTRIES_PER_CALL, true);
                 $response = [];
                 foreach ($chunks as $chunk) {
                     $response += $this->getUsersGroups($chunk, $minecraftID);
@@ -181,9 +180,8 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
             return $responses;
         } else {
-            // TODO limit post size
-            if (count($map) > 100) {
-                $chunks = array_chunk($map, 100, true);
+            if (count($map) > MINECRAFT_SYNC_ENTRIES_PER_CALL) {
+                $chunks = array_chunk($map, MINECRAFT_SYNC_ENTRIES_PER_CALL, true);
                 $response = [];
                 foreach ($chunks as $chunk) {
                     $response += $this->addUsersToGroups($chunk, $minecraftID);
@@ -226,9 +224,8 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             }
             return $responses;
         } else {
-            // TODO limit post size
-            if (count($map) > 100) {
-                $chunks = array_chunk($map, 100, true);
+            if (count($map) > MINECRAFT_SYNC_ENTRIES_PER_CALL) {
+                $chunks = array_chunk($map, MINECRAFT_SYNC_ENTRIES_PER_CALL, true);
                 $response = [];
                 foreach ($chunks as $chunk) {
                     $response += $this->getUsersGroups($chunk, $minecraftID);
@@ -608,6 +605,23 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         }
 
         return $response;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function syncLatest(array $removeGroups = [])
+    {
+        $minecraftUserList = new MinecraftUserList();
+        $lastDay = TIME_NOW - 24 * 60 * 60 * 1000;
+        $minecraftUserList->sqlOrderBy = 'lastSync ASC';
+        $minecraftUserList->sqlLimit = MINECRAFT_SYNC_ENTRIES_PER_CALL;
+        $minecraftUserList->getConditionBuilder()->add('lastSync < ?', [$lastDay]);
+        $minecraftUserList->readObjects();
+        $minecraftUsers = $minecraftUserList->getObjects();
+        if (!empty($minecraftUsers)) {
+            MinecraftSyncHandler::getInstance()->syncMultiple($minecraftUsers, $removeGroups);
+        }
     }
 
     /**

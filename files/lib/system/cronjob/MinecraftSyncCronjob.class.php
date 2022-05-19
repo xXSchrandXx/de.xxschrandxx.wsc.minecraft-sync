@@ -18,15 +18,6 @@ class MinecraftSyncCronjob extends AbstractCronjob
         if (!MINECRAFT_SYNC_ENABLED) {
             return;
         }
-        $minecraftUserList = new MinecraftUserList();
-        $lastDay = TIME_NOW - 24 * 60 * 60 * 1000;
-        $minecraftUserList->sqlOrderBy = 'lastSync ASC';
-        $minecraftUserList->sqlLimit = 100;
-        $minecraftUserList->getConditionBuilder()->add('lastSync < ?', [$lastDay]);
-        $minecraftUserList->readObjects();
-        $minecraftUsers = $minecraftUserList->getObjects();
-        if (!empty($minecraftUsers)) {
-            MinecraftSyncHandler::getInstance()->syncMultiple($minecraftUsers);
-        }
+        MinecraftSyncHandler::getInstance()->syncLatest();
     }
 }
