@@ -3,12 +3,12 @@
 	xmlns="https://www.woltlab.com"
 	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.woltlab.com https://www.woltlab.com/XSD/5.4/package.xsd">
 	<packageinformation>
-		<packagename><![CDATA[Minecraft Sync]]></packagename>
+		<packagename><![CDATA[Minecraft-Sync]]></packagename>
 		<packagename language="de"><![CDATA[Minecraft-Sync]]></packagename>
 		<packagedescription><![CDATA[Syncs Groups between Minecraft and WSC.]]></packagedescription>
 		<packagedescription language="de"><![CDATA[Synchronisiert Gruppen zwischen Minecraft und WSC.]]></packagedescription>
-		<version>0.0.1</version>
-		<date>2022-05-05</date>
+		<version>1.0.0</version>
+		<date>2022-05-19</date>
 	</packageinformation>
 
 	<authorinformation>
