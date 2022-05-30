@@ -1,4 +1,4 @@
-<a href="#" title="{lang}wcf.page.minecraftSyncUserAdd.button.status{/lang}" class="minecraftSyncButton jsToolTips">
+<a href="#" title="{lang}wcf.page.minecraftSyncUserAdd.button.status{/lang}" class="minecraftSyncButton jsToolTip">
 	<span class="icon icon16 fa-refresh"></span>
 </a>
 
