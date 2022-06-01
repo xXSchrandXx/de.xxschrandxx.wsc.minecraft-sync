@@ -394,10 +394,9 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     public function syncLatest(array $removeGroups = [])
     {
         $minecraftUserList = new MinecraftUserList();
-        $lastDay = strtotime('+1 day');
         $minecraftUserList->sqlOrderBy = 'lastSync ASC';
         $minecraftUserList->sqlLimit = MINECRAFT_SYNC_ENTRIES_PER_CALL;
-        $minecraftUserList->getConditionBuilder()->add('lastSync < ?', [$lastDay]);
+        $minecraftUserList->getConditionBuilder()->add('lastSync < ?', [strtotime('+1 day')]);
         $minecraftUserList->readObjects();
         $minecraftUsers = $minecraftUserList->getObjects();
         if (!empty($minecraftUsers)) {
