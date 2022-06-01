@@ -321,11 +321,13 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         foreach ($response['added'] as $minecraftID => $uuids) {
             foreach ($uuids['users'] as $uuid => $data) {
                 $result['added'][$minecraftID] = $data;
+                continue;
             }
         }
         foreach ($response['removed'] as $minecraftID => $uuids) {
             foreach ($uuids['users'] as $uuid => $data) {
                 $result['removed'][$minecraftID] = $data;
+                continue;
             }
         }
 
