@@ -293,7 +293,9 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         if (empty($minecraftUsers)) {
             throw new UserInputException();
         }
-        return $this->sync($minecraftUsers[1], $removeGroups);
+        foreach ($minecraftUsers as $minecraftUser) {
+            return $this->sync($minecraftUser, $removeGroups);
+        }
     }
 
     /**
@@ -301,254 +303,33 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
      */
     public function sync(MinecraftUser $minecraftUser, array $removeGroups = [])
     {
-        $bmIndex = null;
-        if (WCF::benchmarkIsEnabled()) {
-            $bmIndex = Benchmark::getInstance()->start("BEGIN");
-        }
+        $response = $this->syncMultiple([$minecraftUser], $removeGroups);
 
-        // 1. User
-        $user = new User($minecraftUser->userID);
-
-        // 2. Benutzergruppen vom WSC erhalten
-        $wscGroups = $this->getWSCGroups();
-
-        // 3. Liste alle Gruppen des Benutzers auf
-        $userGroupIDs = $user->getGroupIDs();
-
-        // 4. Auflisten welche Gruppen der Benutzer haben sollte
-        /**
-         * Array
-         * (
-         *     $minecraftID => Array
-         *     (
-         *         $groupID => Array
-         *         (
-         *             $i => $groupName
-         *         )
-         * )
-         * @var array
-         */
-        $shouldHave = [];
-        foreach ($wscGroups as $groupID => $wscGroupInfo) {
-            foreach ($wscGroupInfo as $minecraftID => $wscGroup) {
-                if (in_array($groupID, $userGroupIDs)) {
-                    $shouldHave[$minecraftID][$groupID] = $wscGroup;
-                }
-            }
-        }
-
-        // 5. Auflisten welche Gruppen der Benutzer nicht haben sollte
-        /**
-         * Array
-         * (
-         *     $minecraftID => Array
-         *     (
-         *         $groupID => Array
-         *         (
-         *             $i => $groupName
-         *         )
-         * )
-         * @var array
-         */
-        $shouldNotHave = $removeGroups;
-        foreach ($wscGroups as $groupID => $wscGroupInfo) {
-            foreach ($wscGroupInfo as $minecraftID => $wscGroup) {
-                if (!in_array($groupID, $userGroupIDs)) {
-                    $shouldNotHave[$minecraftID][$groupID] = $wscGroup;
-                }
-            }
-        }
-
-//        wcfDebug($shouldHave, $shouldNotHave);
-
-        // 6. Benutzergruppen von Minecraft-Servern erhalten
-        /**
-         * Array
-         * (
-         *     $minecraftID => Array
-         *     (
-         *          $i => $groupName
-         *     )
-         * )
-         * @var false|array
-         */
-        $minecraftHasGroups = $this->getUserGroups($minecraftUser->minecraftUUID);
-
-        // 7. Benutzergruppen vom Minecraft-Server filtern.
-        /**
-         * Array
-         * (
-         *     $minecraftID => Array
-         *     (
-         *          $i => $groupName
-         *     )
-         * )
-         * @var array
-         */
-        $minecraftHasGroupsFiltered = [];
-        foreach ($minecraftHasGroups as $minecraftID => $hasGroups) {
-            if (!$hasGroups) {
-                if (ENABLE_DEBUG_MODE) {
-                    \wcf\functions\exception\logThrowable(new MinecraftException("Could not get groups on server with id " . $minecraftID));
-                }
-                continue;
-            }
-            foreach ($wscGroups as $groupID => $wscGroupInfo) {
-                foreach ($wscGroupInfo as $minecraftID2 => $groups) {
-                    if ($minecraftID != $minecraftID2) {
-                        continue;
-                    }
-                    foreach ($groups as $group) {
-                        if (in_array($group, $hasGroups)) {
-                            if (isset($minecraftHasGroupsFiltered[$minecraftID])) {
-                                \array_push($minecraftHasGroupsFiltered[$minecraftID], $group);
-                            } else {
-                                $minecraftHasGroupsFiltered[$minecraftID] = [$group];
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-//        wcfDebug($minecraftHasGroups, $minecraftHasGroupsFiltered);
-
-        // 8. Gruppen müssen hinzugefügt werden
-        /**
-         * Array
-         * (
-         *     $minecraftID => Array
-         *     (
-         *          $i => $groupName
-         *     )
-         * )
-         * @var array
-         */
-        $needToAdd = [];
-        foreach ($shouldHave as $minecraftID => $minecraftsShouldHaveGroups) {
-            foreach ($minecraftsShouldHaveGroups as $groupID => $shouldHaveGroups) {
-                foreach ($shouldHaveGroups as $shouldHaveGroup) {
-                    $add = false;
-                    if (!array_key_exists($minecraftID, $minecraftHasGroupsFiltered)) {
-                        $add = true;
-                    } else if (!in_array($shouldHaveGroup, $minecraftHasGroupsFiltered[$minecraftID])) {
-                        $add = true;
-                    }
-                    if ($add) {
-                        if (isset($needToAdd[$minecraftID])) {
-                            \array_push($needToAdd[$minecraftID], $shouldHaveGroup);
-                        } else {
-                            $needToAdd[$minecraftID] = [$shouldHaveGroup];
-                        }
-                    }
-                }
-            }
-        }
-
-        // 9. Gruppen müssen entfernt werden
-        /**
-         * Array
-         * (
-         *     $minecraftID => Array
-         *     (
-         *          $i => $groupName
-         *     )
-         * )
-         * @var array
-         */
-        $needToRemove = [];
-        foreach ($shouldNotHave as $minecraftID => $shouldNotHaveWSCGroups) {
-            if (!isset($minecraftHasGroupsFiltered[$minecraftID])) {
-                continue;
-            }
-            foreach ($shouldNotHaveWSCGroups as $groupID => $shouldNotHaveGroups) {
-                foreach ($shouldNotHaveGroups as $shouldNotHaveGroup) {
-                    if (in_array($shouldNotHaveGroup, $minecraftHasGroupsFiltered[$minecraftID])) {
-                        if (isset($needToRemove[$minecraftID])) {
-                            \array_push($needToRemove[$minecraftID], $shouldNotHaveGroup);
-                        } else {
-                            $needToRemove[$minecraftID] = [$shouldNotHaveGroup];
-                        }
-                    }
-                }
-            }
-        }
-
-//        wcfDebug($needToAdd, $needToRemove);
-
-        /**
-         * Array
-         * (
-         *     'status' => $statusMessage
-         *     'statusCode' => $statusCode
-         *     'added' => Array
-         *     (
-         *         $minecraftID => Array
-         *         (
-         *             $i => Array
-         *             (
-         *                 'status' => $statusMessage
-         *                 'statusCode' => $statusCode
-         *             )
-         *         )
-         *     )
-         *     'removed' => Array
-         *     (
-         *         $minecraftID => Array
-         *         (
-         *             $i => Array
-         *             (
-         *                 'status' => $statusMessage
-         *                 'statusCode' => $statusCode
-         *             )
-         *         )
-         *     )
-         * )
-         * @var array
-         */
-        $response = [
-            'added' => [],
-            'removed' => []
-        ];
-
-        // 10 Gruppen hinzufügen
-        foreach ($needToAdd as $minecraftID => $groups) {
-            foreach ($groups as $group) {
-                if (array_key_exists($minecraftID, $response['added'])) {
-                    $response['added'][$minecraftID] += $this->addUserToGroup($minecraftUser->minecraftUUID, $group, $minecraftID);
-                } else {
-                    $response['added'][$minecraftID] = [$this->addUserToGroup($minecraftUser->minecraftUUID, $group, $minecraftID)];
-                }
-            }
-        }
-
-        // 11 Gruppen entfernen
-        foreach ($needToRemove as $minecraftID => $groups) {
-            foreach ($groups as $group) {
-                if (array_key_exists($minecraftID, $response['removed'])) {
-                    $response['removed'][$minecraftID] += $this->removeUserFromGroup($minecraftUser->minecraftUUID, $group, $minecraftID);
-                } else {
-                    $response['removed'][$minecraftID] = [$this->removeUserFromGroup($minecraftUser->minecraftUUID, $group, $minecraftID)];
-                }
-            }
-        }
-
-        // 12 lastSync setzen
-        $editor = new MinecraftUserEditor($minecraftUser);
-        $editor->update(['lastSync' => TIME_NOW]);
-
-        if ($bmIndex !== null) {
-            /**
-             * @var Benchmark
-             */
-            $bm = Benchmark::getInstance();
-            $response['benchmark'] = [
-                'ExecutionTime' => $bm->getExecutionTime(),
-                'MemoryUsage' => $bm->getMemoryUsage()
+        if (array_key_exists('benchmark', $response)) {
+            $result = [
+                'added' => [],
+                'removed' => [],
+                'benchmark' => $response['benchmark']
             ];
-            $bm->stop($bmIndex);
+        } else {
+            $result = [
+                'added' => [],
+                'removed' => [],
+            ];
         }
-        return $response;
+
+        foreach ($response['added'] as $minecraftID => $uuids) {
+            foreach ($uuids['users'] as $uuid => $data) {
+                $result['added'][$minecraftID] = $data;
+            }
+        }
+        foreach ($response['removed'] as $minecraftID => $uuids) {
+            foreach ($uuids['users'] as $uuid => $data) {
+                $result['removed'][$minecraftID] = $data;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -613,7 +394,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     public function syncLatest(array $removeGroups = [])
     {
         $minecraftUserList = new MinecraftUserList();
-        $lastDay = TIME_NOW - 24 * 60 * 60 * 1000;
+        $lastDay = strtotime('+1 day');
         $minecraftUserList->sqlOrderBy = 'lastSync ASC';
         $minecraftUserList->sqlLimit = MINECRAFT_SYNC_ENTRIES_PER_CALL;
         $minecraftUserList->getConditionBuilder()->add('lastSync < ?', [$lastDay]);
