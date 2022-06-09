@@ -16,7 +16,6 @@
 	</authorinformation>
 
 	<requiredpackages>
-		<requiredpackage minversion="5.4.8">com.woltlab.wcf</requiredpackage>
 		<requiredpackage minversion="2.0.1" file="requirements/de.xxschrandxx.wsc.minecraft-linker.tar.gz">de.xxschrandxx.wsc.minecraft-linker</requiredpackage>
 	</requiredpackages>
 
@@ -24,6 +23,10 @@
 		<excludedpackage version="6.0.0 Alpha 1">com.woltlab.wcf</excludedpackage>
 		<excludedpackage version="3.0.0">de.xxschrandxx.wsc.minecraft-linker</excludedpackage>
 	</excludedpackages>
+
+	<instructions type="update" fromversion="">
+		<instruction type="file"/>
+	</instructions>
 
 	<instructions type="install">
 		<instruction type="acpTemplate"/>
