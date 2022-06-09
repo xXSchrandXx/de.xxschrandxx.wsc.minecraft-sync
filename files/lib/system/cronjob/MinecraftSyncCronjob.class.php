@@ -3,7 +3,6 @@
 namespace wcf\system\cronjob;
 
 use wcf\data\cronjob\Cronjob;
-use wcf\data\user\minecraft\MinecraftUserList;
 use wcf\system\minecraft\MinecraftSyncHandler;
 
 class MinecraftSyncCronjob extends AbstractCronjob
