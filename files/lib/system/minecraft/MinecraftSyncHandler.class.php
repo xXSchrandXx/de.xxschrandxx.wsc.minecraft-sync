@@ -3,6 +3,7 @@
 namespace wcf\system\minecraft;
 
 use GuzzleHttp\Exception\GuzzleException;
+use InvalidArgumentException;
 use wcf\data\user\group\UserGroupList;
 use wcf\data\user\minecraft\MinecraftUser;
 use wcf\data\user\minecraft\MinecraftUserEditor;
@@ -32,16 +33,13 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
      * Calls methods on minecrafts and catches exceptions.
      * @see AbstractMultipleMinecraftHandler#call
      */
-    protected function callAndCatch(string $httpMethod, string $method = '', array $args = [], ?int $minecraftID = null)
+    protected function callAndCatch(string $httpMethod, string $method = '', array $args = [], ?int $minecraftID = null): array
     {
         try {
             /** @var \Psr\Http\Message\ResponseInterface */
             $response = $this->call($httpMethod, $method, $args, $minecraftID);
-            if ($response === null) {
-                throw new MinecraftException("Unknown server with id " . $minecraftID);
-            }
             return JSON::decode($response->getBody());
-        } catch (GuzzleException | SystemException | MinecraftException $e) {
+        } catch (GuzzleException | SystemException | InvalidArgumentException $e) {
             if (ENABLE_DEBUG_MODE) {
                 \wcf\functions\exception\logThrowable($e);
             }
