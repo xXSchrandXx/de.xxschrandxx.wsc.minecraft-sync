@@ -289,13 +289,11 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         $minecraftUserList = new MinecraftUserList();
         $minecraftUserList->getConditionBuilder()->add('minecraftUUID = ?', [$uuid]);
         $minecraftUserList->readObjects();
-        $minecraftUsers = $minecraftUserList->getObjects();
-        if (empty($minecraftUsers)) {
-            throw new UserInputException();
+        $minecraftUser = $minecraftUserList->getSingleObject();
+        if ($minecraftUser === null) {
+            throw new \BadMethodCallException("Cannot get a single object when the list contains no objects.");
         }
-        foreach ($minecraftUsers as $minecraftUser) {
-            return $this->sync($minecraftUser, $removeGroups);
-        }
+        return $this->sync($minecraftUser, $removeGroups);
     }
 
     /**

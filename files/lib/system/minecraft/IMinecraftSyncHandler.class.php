@@ -144,6 +144,7 @@ interface IMinecraftSyncHandler
      *         )
      *     )
      * )
+     * @throws BadMethodCallException
      */
     public function syncMinecraftUUID(string $uuid, array $removeGroups = []);
 
