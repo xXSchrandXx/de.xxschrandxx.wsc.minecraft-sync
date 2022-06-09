@@ -53,7 +53,7 @@ class MinecraftUserSyncAction extends AbstractDatabaseObjectAction
     {
         $response = [];
         foreach ($this->getObjects() as $editor) {
-            $response[$editor->getObjectID()] = MinecraftSyncHandler::getInstance()->sync($editor);
+            $response[$editor->getObjectID()] = MinecraftSyncHandler::getInstance()->sync($editor->getDecoratedObject());
         }
         return $response;
     }
