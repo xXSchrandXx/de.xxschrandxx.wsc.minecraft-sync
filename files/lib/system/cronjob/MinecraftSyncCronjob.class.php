@@ -3,7 +3,8 @@
 namespace wcf\system\cronjob;
 
 use wcf\data\cronjob\Cronjob;
-use wcf\system\minecraft\MinecraftSyncHandler;
+use wcf\system\background\BackgroundQueueHandler;
+use wcf\system\background\job\MinecraftSyncSyncBackgroundJob;
 
 class MinecraftSyncCronjob extends AbstractCronjob
 {
@@ -17,6 +18,6 @@ class MinecraftSyncCronjob extends AbstractCronjob
         if (!MINECRAFT_SYNC_ENABLED) {
             return;
         }
-        MinecraftSyncHandler::getInstance()->syncLatest();
+        BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob());
     }
 }

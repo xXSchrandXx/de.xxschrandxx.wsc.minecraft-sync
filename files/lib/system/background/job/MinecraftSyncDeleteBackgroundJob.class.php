@@ -35,6 +35,11 @@ class MinecraftSyncDeleteBackgroundJob extends AbstractBackgroundJob
         }
         $responses = MinecraftSyncHandler::getInstance()->delete($this->minecraftUser);
         // TODO fail on TooManyConnections in responses
-        // Waiting until 5.5 update
+        foreach ($responses as $minecraftID => $response) {
+            if (array_key_exists('retryAfter', $response)) {
+                $this->retryAfter = $response['retryAfter'];
+                $this->fail();
+            }
+        }
     }
 }

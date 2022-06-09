@@ -2,9 +2,7 @@
 
 namespace wcf\system\background\job;
 
-use wcf\data\user\minecraft\MinecraftUserList;
 use wcf\system\background\job\AbstractBackgroundJob;
-use wcf\system\minecraft\MinecraftHandler;
 use wcf\system\minecraft\MinecraftSyncHandler;
 
 class MinecraftSyncSyncBackgroundJob extends AbstractBackgroundJob
@@ -37,14 +35,23 @@ class MinecraftSyncSyncBackgroundJob extends AbstractBackgroundJob
             return;
         }
         if ($this->userID === null) {
-            MinecraftSyncHandler::getInstance()->syncLatest();
+            $responses = MinecraftSyncHandler::getInstance()->syncLatest();
             // TODO fail on TooManyConnections in responses
-            // Queue multiple syncMultiple??
-            // Waiting until 5.5 update
+            foreach ($responses as $minecraftID => $response) {
+                if (array_key_exists('retryAfter', $response)) {
+                    $this->retryAfter = $response['retryAfter'];
+                    $this->fail();
+                }
+            }
         } else {
-            MinecraftSyncHandler::getInstance()->syncUser($this->userID, $this->unsetGroups);
+            $responses = MinecraftSyncHandler::getInstance()->syncUser($this->userID, $this->unsetGroups);
             // TODO fail on TooManyConnections in responses
-            // Waiting until 5.5 update
+            foreach ($responses as $minecraftID => $response) {
+                if (array_key_exists('retryAfter', $response)) {
+                    $this->retryAfter = $response['retryAfter'];
+                    $this->fail();
+                }
+            }
         }
     }
 }

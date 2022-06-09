@@ -2,6 +2,7 @@
 
 namespace wcf\system\minecraft;
 
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
 use wcf\data\user\group\UserGroupList;
@@ -39,6 +40,22 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
             /** @var \Psr\Http\Message\ResponseInterface */
             $response = $this->call($httpMethod, $method, $args, $minecraftID);
             return JSON::decode($response->getBody());
+        } catch (ClientException $e) {
+            if ($e->hasResponse()) {
+                $response = $e->getResponse();
+                if ($response->hasHeader('Retry-After')) {
+                    $retryAfter = intval($response->getHeader('Retry-After'));
+                    return [
+                        'status' => $e->getMessage(),
+                        'statusCode' => $e->getCode(),
+                        'retryAfter' => $retryAfter
+                    ];
+                }
+            }
+            return [
+                'status' => $e->getMessage(),
+                'statusCode' => $e->getCode()
+            ];
         } catch (GuzzleException | SystemException | InvalidArgumentException $e) {
             if (ENABLE_DEBUG_MODE) {
                 \wcf\functions\exception\logThrowable($e);
