@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<data xmlns="http://www.woltlab.com"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/5.4/eventListener.xsd">
+<data xmlns="https://www.woltlab.com"
+	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.woltlab.com https://www.woltlab.com/XSD/5.5/eventListener.xsd">
 	<import>
 		<!-- Synchronisiert alle, wenn Daten einer Gruppe geändert werden -->
 		<eventlistener name="minecraftACPGroupAdd">
