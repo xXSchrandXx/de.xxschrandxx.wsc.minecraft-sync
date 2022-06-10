@@ -31,7 +31,7 @@ class MinecraftSyncSyncUserBackgroundJob extends AbstractBackgroundJob
      */
     public function perform()
     {
-        if (MINECRAFT_SYNC_ENABLED) {
+        if (!MINECRAFT_SYNC_ENABLED) {
             return;
         }
         $responses = MinecraftSyncHandler::getInstance()->syncUser($this->userID, $this->unsetGroups);
