@@ -4,7 +4,7 @@ namespace wcf\system\event\listener;
 
 use wcf\system\background\BackgroundQueueHandler;
 use wcf\system\background\job\MinecraftSyncDeleteBackgroundJob;
-use wcf\system\background\job\MinecraftSyncSyncBackgroundJob;
+use wcf\system\background\job\MinecraftSyncSyncUserBackgroundJob;
 
 class MinecraftSyncMinecraftLinkerListener implements IParameterizedEventListener
 {
@@ -20,7 +20,7 @@ class MinecraftSyncMinecraftLinkerListener implements IParameterizedEventListene
         if ($action == 'create') {
             /** @var MinecraftUser */
             $minecraftUser = $eventObj->parameters['data'];
-            BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob($minecraftUser->userID));
+            BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncUserBackgroundJob($minecraftUser->userID));
         } else if ($action == 'delete') {
             foreach ($eventObj->getObjects() as /** @var MinecraftUser */$minecraftUser) {
                 BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncDeleteBackgroundJob($minecraftUser));

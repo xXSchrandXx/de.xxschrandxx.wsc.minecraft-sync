@@ -4,7 +4,7 @@ namespace wcf\system\event\listener;
 
 use wcf\acp\form\UserGroupEditForm;
 use wcf\system\background\BackgroundQueueHandler;
-use wcf\system\background\job\MinecraftSyncSyncBackgroundJob;
+use wcf\system\background\job\MinecraftSyncSyncGroupBackgroundJob;
 use wcf\system\exception\SystemException;
 use wcf\system\exception\UserInputException;
 use wcf\system\minecraft\MinecraftSyncHandler;
@@ -114,9 +114,9 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
                         $diff[$minecraftID][$eventObj->groupID] = $groupNames;
                     }
                 }
-                BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob($diff));
+                BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncGroupBackgroundJob($eventObj->groupID, $diff));
             } else {
-                BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncBackgroundJob());
+                BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncGroupBackgroundJob($eventObj->groupID));
             }
         }
 

@@ -3,7 +3,7 @@
 namespace wcf\system\event\listener;
 
 use wcf\system\background\BackgroundQueueHandler;
-use wcf\system\background\job\MinecraftSyncSyncBackgroundJob;
+use wcf\system\background\job\MinecraftSyncSyncUserBackgroundJob;
 
 class MinecraftSyncUserChangeGroupListener implements IParameterizedEventListener
 {
@@ -20,7 +20,7 @@ class MinecraftSyncUserChangeGroupListener implements IParameterizedEventListene
             /** @var BackgroundQueueHandler */
             $handler = BackgroundQueueHandler::getInstance();
             foreach ($eventObj->getObjects() as $userEditor) {
-                $handler->enqueueIn(new MinecraftSyncSyncBackgroundJob($userEditor->userID));
+                $handler->enqueueIn(new MinecraftSyncSyncUserBackgroundJob($userEditor->userID));
             }
         }
     }
