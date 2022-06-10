@@ -2,7 +2,6 @@
 
 namespace wcf\system\background\job;
 
-use wcf\data\user\UserList;
 use wcf\system\background\job\AbstractBackgroundJob;
 use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
