@@ -286,12 +286,20 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         $minecraftUserList->readObjects();
         $minecraftUsers = $minecraftUserList->getObjects();
 
-        $responses = [];
-        foreach ($minecraftUsers as $minecraftUserID => $minecraftUser) {
-            $responses[$minecraftUserID] = $this->sync($minecraftUser, $removeGroups);
-        }
+        return $this->syncMultiple($minecraftUsers, $removeGroups);
+    }
 
-        return $responses;
+    /**
+     * @inheritDoc
+     */
+    public function syncMultipleUser(array $userIDs, array $removeGroups = [])
+    {
+        $minecraftUserList = new MinecraftUserList();
+        $minecraftUserList->getConditionBuilder()->add('userID IN (?)', [$userIDs]);
+        $minecraftUserList->readObjects();
+        $minecraftUsers = $minecraftUserList->getObjects();
+
+        return $this->syncMultiple($minecraftUsers, $removeGroups);
     }
 
     /**
