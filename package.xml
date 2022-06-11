@@ -7,7 +7,7 @@
 		<packagename language="de"><![CDATA[Minecraft-Sync]]></packagename>
 		<packagedescription><![CDATA[Syncs Groups between Minecraft and WSC.]]></packagedescription>
 		<packagedescription language="de"><![CDATA[Synchronisiert Gruppen zwischen Minecraft und WSC.]]></packagedescription>
-		<version>1.0.0</version>
+		<version>1.0.1</version>
 		<date>2022-05-19</date>
 	</packageinformation>
 
@@ -23,8 +23,9 @@
 		<excludedpackage version="3.0.0">de.xxschrandxx.wsc.minecraft-linker</excludedpackage>
 	</excludedpackages>
 
-	<instructions type="update" fromversion="">
+	<instructions type="update" fromversion="1.0.0">
 		<instruction type="file"/>
+		<instruction type="database">acp/database/update_de.xxschrandxx.wsc.minecraft-sync.php</instruction>
 	</instructions>
 
 	<instructions type="install">
