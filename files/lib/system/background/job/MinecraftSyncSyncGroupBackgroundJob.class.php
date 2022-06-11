@@ -55,7 +55,7 @@ class MinecraftSyncSyncGroupBackgroundJob extends AbstractBackgroundJob
         $responses = [];
         foreach ($this->userIDChunks as $chunkID => $userIDs) {
             if (!empty($userIDs)) {
-                $responses =+ MinecraftSyncHandler::getInstance()->syncMultipleUser($userIDs, $this->removeGroups);
+                $responses = + MinecraftSyncHandler::getInstance()->syncMultipleUser($userIDs, $this->removeGroups);
             }
         }
         // TODO fail on TooManyConnections in responses
@@ -65,7 +65,7 @@ class MinecraftSyncSyncGroupBackgroundJob extends AbstractBackgroundJob
                 $this->retryAfter = $response['retryAfter'];
                 $fail = true;
             } else {
-                
+                // TODO testing
             }
         }
         if ($fail) {
