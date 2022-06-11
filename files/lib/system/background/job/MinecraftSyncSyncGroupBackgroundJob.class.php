@@ -18,7 +18,7 @@ class MinecraftSyncSyncGroupBackgroundJob extends AbstractBackgroundJob
         $this->removeGroups = $removeGroups;
 
         $sql = "SELECT userID
-                FROM wcf".WCF_N."_user_to_group
+                FROM wcf" . WCF_N . "_user_to_group
                 WHERE groupID = ?";
         try {
             /** @var \wcf\system\database\statement\PreparedStatement */
