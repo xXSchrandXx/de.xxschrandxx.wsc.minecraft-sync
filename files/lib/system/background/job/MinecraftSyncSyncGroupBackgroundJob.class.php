@@ -79,7 +79,9 @@ class MinecraftSyncSyncGroupBackgroundJob extends AbstractBackgroundJob
     }
 
     /**
-     * 
+     * Überprüft ob ein Chunk erneut synchronisiert werden muss.
+     * @param array responses
+     * @return bool|false
      */
     private function getRetryAfter($responses)
     {

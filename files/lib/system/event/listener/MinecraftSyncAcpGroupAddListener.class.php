@@ -125,7 +125,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
 
         $job = new MinecraftSyncSyncGroupBackgroundJob($eventObj->groupID, $diff);
 //        $job->perform();
-      BackgroundQueueHandler::getInstance()->enqueueIn($job);
+        BackgroundQueueHandler::getInstance()->enqueueIn($job);
 
         // reset values
         if (!($eventObj instanceof UserGroupEditForm)) {
