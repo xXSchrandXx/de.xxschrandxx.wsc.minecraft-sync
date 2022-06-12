@@ -54,7 +54,7 @@ class MinecraftSyncSyncGroupBackgroundJob extends AbstractBackgroundJob
                 if (ENABLE_DEBUG_MODE) {
                     \wcf\functions\exception\logThrowable($e);
                 }
-            }            
+            }
         }
 
         $fail = false;
