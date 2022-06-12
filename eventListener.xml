@@ -14,21 +14,21 @@
 		<eventlistener name="minecraftUserModify">
 			<eventclassname>wcf\data\user\minecraft\MinecraftUserAction</eventclassname>
 			<eventname>finalizeAction</eventname>
-			<enviroment>all</enviroment>
+			<environment>all</environment>
 			<listenerclassname>wcf\system\event\listener\MinecraftSyncMinecraftLinkerListener</listenerclassname>
 		</eventlistener>
 		<!-- Synchronisiert einen Benutzer, wenn seine Gruppen geändert werden -->
 		<eventlistener name="minecraftUserChangeGroup">
 			<eventclassname>wcf\data\user\UserAction</eventclassname>
 			<eventname>finalizeAction</eventname>
-			<enviroment>all</enviroment>
+			<environment>all</environment>
 			<listenerclassname>wcf\system\event\listener\MinecraftSyncUserChangeGroupListener</listenerclassname>
 		</eventlistener>
 		<!-- Entferne aus Gruppen, wenn ein Benutzer entfernt wird -->
 		<eventlistener name="minecraftUserDelete">
 			<eventclassname>wcf\data\user\UserAction</eventclassname>
 			<eventname>initializeAction</eventname>
-			<enviroment>all</enviroment>
+			<environment>all</environment>
 			<listenerclassname>wcf\system\event\listener\MinecraftSyncUserDeleteListener</listenerclassname>
 		</eventlistener>
 	</import>
