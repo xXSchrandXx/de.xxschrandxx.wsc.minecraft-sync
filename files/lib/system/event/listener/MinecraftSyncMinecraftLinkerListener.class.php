@@ -18,9 +18,8 @@ class MinecraftSyncMinecraftLinkerListener implements IParameterizedEventListene
         }
         $action = $eventObj->getActionName();
         if ($action == 'create') {
-            /** @var MinecraftUser */
-            $minecraftUser = $eventObj->parameters['data'];
-            $job = new MinecraftSyncSyncUserBackgroundJob($minecraftUser->userID);
+            $minecraftUser = $eventObj->getParameters()['data'];
+            $job = new MinecraftSyncSyncUserBackgroundJob($minecraftUser['userID']);
 //            $job->perform();
             BackgroundQueueHandler::getInstance()->enqueueIn($job);
         } else if ($action == 'delete') {
