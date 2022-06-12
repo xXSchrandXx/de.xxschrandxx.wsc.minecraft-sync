@@ -25,6 +25,7 @@
 
 	<instructions type="update" fromversion="1.0.0">
 		<instruction type="file"/>
+		<instruction type="eventListener"/>
 		<instruction type="database">acp/database/update_de.xxschrandxx.wsc.minecraft-sync.php</instruction>
 	</instructions>
 
