@@ -5,7 +5,7 @@
 		<!-- Synchronisiert alle, wenn Daten einer Gruppe geändert werden -->
 		<eventlistener name="minecraftACPGroupAdd">
 			<eventclassname>wcf\acp\form\UserGroupAddForm</eventclassname>
-			<eventname>readFormParameters,validate,save,assignVariables</eventname>
+			<eventname>readFormParameters,validate,save,saved,assignVariables</eventname>
 			<environment>admin</environment>
 			<inherit>1</inherit>
 			<listenerclassname>wcf\system\event\listener\MinecraftSyncAcpGroupAddListener</listenerclassname>

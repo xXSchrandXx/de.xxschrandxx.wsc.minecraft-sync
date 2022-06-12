@@ -636,10 +636,25 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
                                 }
                             }
                         }
+                        if (array_key_exists($minecraftID, $removeGroups)) {
+                            foreach ($removeGroups[$minecraftID] as $groupID => $shouldNotHaveGroups) {
+                                foreach ($shouldNotHaveGroups as $shouldNotHaveGroup) {
+                                    if (in_array($shouldNotHaveGroup, $hasGroups)) {
+                                        if (isset($minecraftHasGroupsFiltered[$minecraftID][$uuid])) {
+                                            \array_push($minecraftHasGroupsFiltered[$minecraftID][$uuid], $shouldNotHaveGroup);
+                                        } else {
+                                            $minecraftHasGroupsFiltered[$minecraftID][$uuid] = [$shouldNotHaveGroup];
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+
+//        wcfDebug($uuidsMinecraftHasGroups, $minecraftHasGroupsFiltered);
 
         // 8. Gruppen müssen hinzugefügt werden
         /**
