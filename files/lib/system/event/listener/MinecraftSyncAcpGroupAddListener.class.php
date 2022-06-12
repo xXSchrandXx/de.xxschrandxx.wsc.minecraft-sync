@@ -114,9 +114,13 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
                         $diff[$minecraftID][$eventObj->groupID] = $groupNames;
                     }
                 }
-                BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncGroupBackgroundJob($eventObj->groupID, $diff));
+                $job = new MinecraftSyncSyncGroupBackgroundJob($eventObj->groupID, $diff);
+//                $job->perform();
+                BackgroundQueueHandler::getInstance()->enqueueIn($job);
             } else {
-                BackgroundQueueHandler::getInstance()->enqueueIn(new MinecraftSyncSyncGroupBackgroundJob($eventObj->groupID));
+                $job = new MinecraftSyncSyncGroupBackgroundJob($eventObj->groupID);
+//                $job->perform();
+                BackgroundQueueHandler::getInstance()->enqueueIn($job);
             }
         }
 

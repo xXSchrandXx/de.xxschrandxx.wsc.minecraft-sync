@@ -20,7 +20,9 @@ class MinecraftSyncUserChangeGroupListener implements IParameterizedEventListene
             /** @var BackgroundQueueHandler */
             $handler = BackgroundQueueHandler::getInstance();
             foreach ($eventObj->getObjects() as $userEditor) {
-                $handler->enqueueIn(new MinecraftSyncSyncUserBackgroundJob($userEditor->userID));
+                $job = new MinecraftSyncSyncUserBackgroundJob($userEditor->userID);
+//                $job->perform();
+                $handler->enqueueIn($job);
             }
         }
     }

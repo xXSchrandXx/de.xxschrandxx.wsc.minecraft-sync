@@ -19,7 +19,9 @@ class MinecraftSyncUserDeleteListener implements IParameterizedEventListener
             /** @var BackgroundQueueHandler */
             $handler = BackgroundQueueHandler::getInstance();
             foreach ($eventObj->getObjects() as $userEditor) {
-                $handler->enqueueIn(new MinecraftSyncDeleteBackgroundJob($userEditor->userID));
+                $job = new MinecraftSyncDeleteBackgroundJob($userEditor->userID);
+//                $job->perform();
+                $handler->enqueueIn($job);
             }
         }
     }
