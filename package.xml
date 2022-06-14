@@ -21,6 +21,7 @@
 	</requiredpackages>
 
 	<excludedpackages>
+		<excludedpackage version="6.0.0 Alpha 1">com.woltlab.wcf</excludedpackage>
 		<excludedpackage version="3.0.0">de.xxschrandxx.wsc.minecraft-linker</excludedpackage>
 	</excludedpackages>
 
