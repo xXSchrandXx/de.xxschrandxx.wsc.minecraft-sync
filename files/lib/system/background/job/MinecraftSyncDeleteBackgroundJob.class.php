@@ -4,6 +4,7 @@ namespace wcf\system\background\job;
 
 use wcf\data\user\minecraft\MinecraftUser;
 use wcf\system\background\job\AbstractBackgroundJob;
+use wcf\system\exception\MinecraftException;
 use wcf\system\minecraft\MinecraftSyncHandler;
 
 class MinecraftSyncDeleteBackgroundJob extends AbstractBackgroundJob
@@ -34,11 +35,12 @@ class MinecraftSyncDeleteBackgroundJob extends AbstractBackgroundJob
             return;
         }
         $responses = MinecraftSyncHandler::getInstance()->delete($this->minecraftUser);
-        // TODO fail on TooManyConnections in responses
         foreach ($responses as $minecraftID => $response) {
-            if (array_key_exists('retryAfter', $response)) {
-                $this->retryAfter = $response['retryAfter'];
-                $this->fail();
+            if ($response['statusCode'] < 200 && $response['statusCode'] >= 300) {
+                if (array_key_exists('retryAfter', $response)) {
+                    $this->retryAfter = $response['retryAfter'];
+                }
+                throw new MinecraftException('statusCode is not between 199 and 300', $response['statusCode']);
             }
         }
     }

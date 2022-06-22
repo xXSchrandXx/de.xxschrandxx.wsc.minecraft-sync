@@ -5,6 +5,7 @@ namespace wcf\system\background\job;
 use wcf\system\background\job\AbstractBackgroundJob;
 use wcf\system\database\exception\DatabaseQueryException;
 use wcf\system\database\exception\DatabaseQueryExecutionException;
+use wcf\system\exception\MinecraftException;
 use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
 
@@ -74,7 +75,7 @@ class MinecraftSyncSyncGroupBackgroundJob extends AbstractBackgroundJob
         }
 
         if ($fail) {
-            $this->fail();
+            throw new MinecraftException('Synchronisation of "' . $this->groupID . '" failed.');
         }
     }
 
