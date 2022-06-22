@@ -65,6 +65,7 @@ class MinecraftSyncSyncGroupBackgroundJob extends AbstractBackgroundJob
             }
             $response = MinecraftSyncHandler::getInstance()->syncMultipleUser($userIDs, $this->removeGroups);
 
+            // TODO Check if statusCode is between 199 > x < 300
             $retryAfter = $this->getRetryAfter($response);
             if ($retryAfter === false) {
                 $this->userIDChunks[$chunkID] = [];
