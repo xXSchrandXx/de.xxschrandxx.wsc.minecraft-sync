@@ -46,7 +46,7 @@ class MinecraftUserSyncAction extends AbstractDatabaseObjectAction
         }
 
         if (empty($this->getObjects())) {
-            throw new UserInputException('objectID');
+            throw new UserInputException('objectIDs');
         }
     }
 
@@ -79,18 +79,17 @@ class MinecraftUserSyncAction extends AbstractDatabaseObjectAction
         }
 
         if (empty($this->getObjects())) {
-            throw new UserInputException('objectID');
+            throw new UserInputException('objectIDs');
         }
     }
 
     public function groupList()
     {
         $groups = [];
-        foreach ($this->getObjects() as $object) {
-            $groups[$object->objectID] = MinecraftSyncHandler::getInstance()->groupList($object->objectID);
-            $editor = new MinecraftEditor($object);
+        foreach ($this->getObjects() as $editor) {
+            $groups[$editor->objectID] = MinecraftSyncHandler::getInstance()->groupList($editor->objectID);
             $editor->update([
-                'groups' => $groups[$object->objectID]
+                'groups' => $groups[$editor->objectID]
             ]);
         }
         return $groups;
