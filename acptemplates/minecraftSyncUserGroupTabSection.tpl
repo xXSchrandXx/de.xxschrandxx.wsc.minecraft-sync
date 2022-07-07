@@ -1,3 +1,6 @@
+<a href="#" title="{lang}wcf.page.minecraftGroupList.button.status{/lang}" class="minecraftGroupListButton jsToolTip">
+	<span class="icon icon16 fa-refresh"></span>
+</a>
 <dl class="{'minecraftGroupNames-'|concat:$minecraftID}{if $errorField == 'minecraftGroupNames-'|concat:$minecraftID} formError{/if}">
 	<dt>
 		<label for="{'minecraftGroupNames-'|concat:$minecraftID}">
@@ -27,6 +30,12 @@
 </dl>
 
 <script data-relocate="true">
+	require(["xXSchrandXx/Minecraft/MinecraftGroupList", "Language"], function(MinecraftGroupList, Language) {
+		Language.addObject({
+			'wcf.page.minecraftGroupList.button.status.result': '{lang}wcf.page.minecraftGroupList.button.status.result{/lang}'
+		});
+		new MinecraftGroupList.default();
+	});
 	require(['Language', 'WoltLabSuite/Core/Ui/ItemList/Filter'], function(Language, UiItemListFilter) {
 		Language.addObject({
 			'wcf.global.filter.button.visibility': '{jslang}wcf.global.filter.button.visibility{/jslang}',

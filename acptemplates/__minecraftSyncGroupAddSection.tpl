@@ -16,7 +16,7 @@
 					</nav>
 					{foreach from=$minecrafts item=minecraft}
 						<div id="minecraft-sync-{$minecraft->minecraftID}" class="tabMenuContent hidden"
-							data-name="minecraft-sync-{$minecraft->minecraftID}">
+							data-name="minecraft-sync-{$minecraft->minecraftID}" data-object-id="{$minecraft->minecraftID}">
 							<div class="section">
 								{include file='minecraftSyncUserGroupTabSection' minecraftID=$minecraft->minecraftID}
 							</div>

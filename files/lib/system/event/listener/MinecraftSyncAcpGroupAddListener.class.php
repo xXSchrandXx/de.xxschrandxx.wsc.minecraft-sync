@@ -57,16 +57,12 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
     {
         /** @var MinecraftSyncHandler */
         $handler = MinecraftSyncHandler::getInstance();
-        $groups = $handler->groupList();
-        foreach ($this->minecraftGroups as $minecraftID => $groupNames) {
+        $minecrafts = $handler->getMinecrafts();
+
+        foreach ($minecrafts as /** @var \wcf\data\minecraft\Minecraft **/ $minecraft) {
             try {
-                if (!array_key_exists($minecraftID, $groups)) {
-                    throw new UserInputException('minecraftGroupNames-' . $minecraftID, 'unknownMinecraftID', ['minecraftID' => $minecraftID]);
-                }
-                foreach ($groupNames as $groupName) {
-                    if (!in_array($groupName, $groups[$minecraftID])) {
-                        throw new UserInputException('minecraftGroupNames-' . $minecraftID, 'unknownGroupName', ['minecraftID' => $minecraftID, 'minecraftGroupName' => $groupName]);
-                    }
+                if (!array_key_exists($minecraft->minecraftID, $minecraft->minecraftID)) {
+                    throw new UserInputException('minecraftGroupNames-' . $minecraft->minecraftID, 'unknownMinecraftID', ['minecraftID' => $minecraft->minecraftID]);
                 }
             } catch (UserInputException $e) {
                 $eventObj->errorField = $e->getField();
@@ -147,13 +143,18 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
 
         /** @var MinecraftSyncHandler */
         $handler = MinecraftSyncHandler::getInstance();
+        $groupList = [];
+
+        foreach ($handler->getMinecrafts() as $minecraft) {
+            $groupList[$minecraft->minecraftID] = $minecraft->groups;
+        }
 
         // assign variables
         WCF::getTPL()->assign(
             [
                 'minecrafts' => $handler->getMinecrafts(),
                 'minecraftGroups' => $this->minecraftGroups,
-                'minecraftGroupNames' => $handler->groupList()
+                'minecraftGroupNames' => $groupList
             ]
         );
     }

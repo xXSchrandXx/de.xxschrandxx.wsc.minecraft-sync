@@ -5,6 +5,11 @@ use wcf\system\database\table\column\NotNullInt10DatabaseTableColumn;
 use wcf\system\database\table\PartialDatabaseTable;
 
 return [
+    // wcf1_minecraft
+    PartialDatabaseTable::create('wcf1_minecraft')
+        ->columns([
+            BlobDatabaseTableColumn::create('groups')
+        ]),
     // wcf1_user_minecraft
     PartialDatabaseTable::create('wcf1_user_minecraft')
         ->columns([
