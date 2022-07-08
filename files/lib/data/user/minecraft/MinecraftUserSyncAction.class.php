@@ -3,7 +3,6 @@
 namespace wcf\data\user\minecraft;
 
 use wcf\data\AbstractDatabaseObjectAction;
-use wcf\data\minecraft\MinecraftEditor;
 use wcf\system\exception\PermissionDeniedException;
 use wcf\system\exception\UserInputException;
 use wcf\system\minecraft\MinecraftSyncHandler;

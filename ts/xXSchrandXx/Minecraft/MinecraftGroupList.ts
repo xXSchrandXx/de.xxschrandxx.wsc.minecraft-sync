@@ -19,8 +19,6 @@ export class MinecraftGroupList {
         var element = event['path'][3] as HTMLElement;
         var objectID = element.getAttribute('data-object-id') as string;
 
-        console.log(objectID);
-
         Ajax.api({
             _ajaxSetup: () => {
                 return {
