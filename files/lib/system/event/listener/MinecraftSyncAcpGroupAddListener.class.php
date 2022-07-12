@@ -146,7 +146,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
         $groupList = [];
 
         foreach ($handler->getMinecrafts() as $minecraft) {
-            $groupList[$minecraft->minecraftID] = $minecraft->groups;
+            $groupList[$minecraft->minecraftID] = \unserialize($minecraft->groups);
         }
 
         // assign variables

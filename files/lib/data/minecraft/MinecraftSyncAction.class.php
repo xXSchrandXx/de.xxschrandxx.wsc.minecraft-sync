@@ -7,6 +7,7 @@ use wcf\system\exception\PermissionDeniedException;
 use wcf\system\exception\UserInputException;
 use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
+use wcf\util\JSON;
 
 class MinecraftSyncAction extends AbstractDatabaseObjectAction
 {
@@ -34,8 +35,6 @@ class MinecraftSyncAction extends AbstractDatabaseObjectAction
             $this->readObjects();
         }
 
-        wcfDebug($this->getObjectIDs(), $this->getObjects());
-
         if (empty($this->getObjects())) {
             throw new UserInputException('objectIDs');
         }
@@ -43,13 +42,10 @@ class MinecraftSyncAction extends AbstractDatabaseObjectAction
 
     public function groupList()
     {
-        $groups = [];
         foreach ($this->getObjects() as $editor) {
-            $groups[$editor->objectID] = MinecraftSyncHandler::getInstance()->groupList($editor->objectID);
             $editor->update([
-                'groups' => $groups[$editor->objectID]
+                'groups' => \serialize(MinecraftSyncHandler::getInstance()->groupList($editor->objectID)[$editor->getObjectID()])
             ]);
         }
-        return $groups;
     }
 }

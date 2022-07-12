@@ -30,19 +30,7 @@ export class MinecraftUserSync {
                 };
             },
             _ajaxSuccess: (data: DatabaseObjectActionResponse) => {
-                UiDialog.open({
-                    _dialogSetup: () => {
-                        return {
-                            id: 'minecraftSyncDialog',
-                            source: null,
-                            options: {
-                                onShow: function(): void {
-                                    setTitle('minecraftSyncDialog', Language.get('wcf.page.minecraftSyncUserAdd.button.status.result'));
-                                }
-                            }
-                        }
-                    }
-                }, JSON.stringify(data['returnValues'][objectID]));
+                // TODO reload page
             }
         });
     }
