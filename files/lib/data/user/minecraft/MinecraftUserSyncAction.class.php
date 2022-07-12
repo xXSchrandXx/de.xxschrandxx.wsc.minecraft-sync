@@ -21,16 +21,6 @@ class MinecraftUserSyncAction extends AbstractDatabaseObjectAction
      */
     protected $permissionsSync = ['admin.minecraftSync.canManage'];
 
-    /**
-     * Returns a list of currently loaded objects.
-     *
-     * @return MinecraftUserEditor[]
-     */
-    public function getObjects()
-    {
-        return parent::getObjects();
-    }
-
     public function validateSync()
     {
         // validate permissions
@@ -76,6 +66,8 @@ class MinecraftUserSyncAction extends AbstractDatabaseObjectAction
         if (empty($this->getObjects())) {
             $this->readObjects();
         }
+
+        wcfDebug($this->getObjectIDs(), $this->getObjects());
 
         if (empty($this->getObjects())) {
             throw new UserInputException('objectIDs');
