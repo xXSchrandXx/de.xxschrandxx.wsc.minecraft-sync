@@ -24,7 +24,7 @@ export class MinecraftGroupList {
                 return {
                     data: {
                         actionName: "groupList",
-                        className: "wcf\\data\\user\\minecraft\\MinecraftUserSyncAction",
+                        className: "wcf\\data\\minecraft\\MinecraftSyncAction",
                         objectIDs: [objectID]
                     }
                 };
