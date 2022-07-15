@@ -1,8 +1,7 @@
 import { DatabaseObjectActionResponse } from "WoltLabSuite/Core/Ajax/Data";
 import * as Ajax from "WoltLabSuite/Core/Ajax";
-import * as UiDialog from "WoltLabSuite/Core/Ui/Dialog";
+import * as UiNotification from "WoltLabSuite/Core/Ui/Notification";
 import * as Language from "WoltLabSuite/Core/Language";
-import { setTitle } from "WoltLabSuite/Core/Ui/Dialog";
 
 export class MinecraftGroupList {
     public constructor() {
@@ -16,7 +15,7 @@ export class MinecraftGroupList {
     public _click(event: Event): void {
         event.preventDefault();
 
-        var element = event['path'][3] as HTMLElement;
+        var element = event['path'][5] as HTMLElement;
         var objectID = element.getAttribute('data-object-id') as string;
 
         Ajax.api({
@@ -30,19 +29,10 @@ export class MinecraftGroupList {
                 };
             },
             _ajaxSuccess: (data: DatabaseObjectActionResponse) => {
-                UiDialog.open({
-                    _dialogSetup: () => {
-                        return {
-                            id: 'minecraftSyncDialog',
-                            source: null,
-                            options: {
-                                onShow: function(): void {
-                                    setTitle('minecraftSyncDialog', Language.get('wcf.page.minecraftSyncUserAdd.button.status.result'));
-                                }
-                            }
-                        }
-                    }
-                }, JSON.stringify(data['returnValues'][objectID]));
+                // TODO refresh list and don't refresh
+                UiNotification.show(Language.get('wcf.global.success'), () => {
+                    window.location.reload();
+                });
             }
         });
     }

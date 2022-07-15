@@ -36,7 +36,7 @@ class MinecraftSyncAction extends AbstractDatabaseObjectAction
         }
 
         if (empty($this->getObjects())) {
-            throw new UserInputException('objectIDs');
+            throw new UserInputException('objectIDs', 'empty', ['objectIDs' => $this->getObjectIDs()]);
         }
     }
 

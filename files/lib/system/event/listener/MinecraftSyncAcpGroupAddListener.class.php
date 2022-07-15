@@ -61,7 +61,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
 
         foreach ($minecrafts as /** @var \wcf\data\minecraft\Minecraft **/ $minecraft) {
             try {
-                if (!array_key_exists($minecraft->minecraftID, $minecraft->minecraftID)) {
+                if (!array_key_exists($minecraft->minecraftID, $minecrafts)) {
                     throw new UserInputException('minecraftGroupNames-' . $minecraft->minecraftID, 'unknownMinecraftID', ['minecraftID' => $minecraft->minecraftID]);
                 }
             } catch (UserInputException $e) {
