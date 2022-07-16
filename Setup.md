@@ -1,5 +1,5 @@
-# Setting up Minecraft-API
-[German](##German) | [English](##English)
+# Setting up Minecraft-Sync
+[German](#German) | [English](#English)
 
 ## English
 1. Install [Minecraft-Linker](https://github.com/xXSchrandXx/de.xxschrandxx.wsc.minecraft-linker/blob/main/Setup.md) and all required packages and plugins.
