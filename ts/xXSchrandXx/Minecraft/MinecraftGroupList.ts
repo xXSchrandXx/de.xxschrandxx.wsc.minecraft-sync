@@ -29,7 +29,7 @@ export class MinecraftGroupList {
                 };
             },
             _ajaxSuccess: (data: DatabaseObjectActionResponse) => {
-                // TODO refresh list and don't refresh
+                // TODO recreate list and don't refresh
                 UiNotification.show(Language.get('wcf.global.success'), () => {
                     window.location.reload();
                 });
