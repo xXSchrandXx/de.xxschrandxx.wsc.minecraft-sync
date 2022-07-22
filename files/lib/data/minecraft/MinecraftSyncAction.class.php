@@ -7,7 +7,6 @@ use wcf\system\exception\PermissionDeniedException;
 use wcf\system\exception\UserInputException;
 use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
-use wcf\util\JSON;
 
 class MinecraftSyncAction extends AbstractDatabaseObjectAction
 {

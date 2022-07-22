@@ -16,8 +16,10 @@ export class MinecraftUserSync {
     public _click(event: Event): void {
         event.preventDefault();
 
-        var element = event['path'][3] as HTMLElement;
+        var element = event['path'][2] as HTMLElement;
         var objectID = element.getAttribute('data-object-id') as string;
+
+        console.log(objectID);
 
         Ajax.api({
             _ajaxSetup: () => {
@@ -42,7 +44,7 @@ export class MinecraftUserSync {
                             }
                         }
                     }
-                }, JSON.stringify(data['returnValues'][objectID]));
+                }, data['returnValues'][objectID]);
             }
         });
     }

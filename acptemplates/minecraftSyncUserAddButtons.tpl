@@ -1,6 +1,6 @@
-<a href="#" title="{lang}wcf.page.minecraftSyncUserAdd.button.status{/lang}" class="minecraftSyncButton jsToolTip">
-	<span class="icon icon16 fa-refresh"></span>
-</a>
+<span class="minecraftSyncButton icon icon16 fa-refresh pointer jsToolTip"
+	title="{lang}wcf.page.minecraftSyncUserAdd.button.status{/lang}">
+</span>
 
 <script data-relocate="true">
 	require(["xXSchrandXx/Minecraft/MinecraftUserSync", "Language"], function(MinecraftUserSync, Language) {

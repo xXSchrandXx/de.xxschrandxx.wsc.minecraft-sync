@@ -7,6 +7,7 @@ use wcf\system\exception\PermissionDeniedException;
 use wcf\system\exception\UserInputException;
 use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
+use wcf\util\StringUtil;
 
 class MinecraftUserSyncAction extends AbstractDatabaseObjectAction
 {
@@ -41,10 +42,18 @@ class MinecraftUserSyncAction extends AbstractDatabaseObjectAction
 
     public function sync()
     {
-        $response = [];
+        $responses = [];
         foreach ($this->getObjects() as $editor) {
-            $response[$editor->getObjectID()] = MinecraftSyncHandler::getInstance()->sync($editor->getDecoratedObject());
+            $responses[$editor->getObjectID()] = MinecraftSyncHandler::getInstance()->sync($editor->getDecoratedObject());
         }
-        return $response;
+        $templates = [];
+        foreach ($responses as $objectID => $response) {
+            $variables = $response;
+            $variables['objectID'] = $objectID;
+            $tmpTemplate = WCF::getTPL()->fetch('minecraftUserSyncResult', 'wcf', $variables);
+            $template = \str_replace(["\\", "\n", "\t", "\r"], '', StringUtil::unifyNewlines($tmpTemplate));
+            $templates[$objectID] = $template;
+        }
+        return $templates;
     }
 }
