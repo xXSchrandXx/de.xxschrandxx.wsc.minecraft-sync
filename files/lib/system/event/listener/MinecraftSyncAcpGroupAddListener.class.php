@@ -98,6 +98,9 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
      */
     public function saved(/** @var UserGroupAddForm */$eventObj)
     {
+        if (!isset($eventObj->groupID)) {
+            return;
+        }
         /**
         * List removed 'minecraftGroups'
         * @var array
