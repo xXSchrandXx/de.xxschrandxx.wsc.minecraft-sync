@@ -327,29 +327,39 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
     {
         $response = $this->syncMultiple([$minecraftUser], $removeGroups);
 
+        $result = [
+            'added' => [],
+            'removed' => [],
+            'error' => []
+        ];
         if (array_key_exists('benchmark', $response)) {
-            $result = [
-                'added' => [],
-                'removed' => [],
-                'benchmark' => $response['benchmark']
-            ];
-        } else {
-            $result = [
-                'added' => [],
-                'removed' => [],
-            ];
+                $result['benchmark'] = $response['benchmark'];
         }
 
         foreach ($response['added'] as $minecraftID => $uuids) {
+            if (!array_key_exists('users', $uuids)) {
+                if (array_key_exists($minecraftID, $result['error'])) {
+                    array_push($result['error'][$minecraftID], $uuids);
+                } else {
+                    $result['error'][$minecraftID] = [$uuids];
+                }
+                continue;
+            }
             foreach ($uuids['users'] as $uuid => $data) {
                 $result['added'][$minecraftID] = $data;
-                continue;
             }
         }
         foreach ($response['removed'] as $minecraftID => $uuids) {
+            if (!array_key_exists('users', $uuids)) {
+                if (array_key_exists($minecraftID, $result['error'])) {
+                    array_push($result['error'][$minecraftID], $uuids);
+                } else {
+                    $result['error'][$minecraftID] = [$uuids];
+                }
+                continue;
+            }
             foreach ($uuids['users'] as $uuid => $data) {
                 $result['removed'][$minecraftID] = $data;
-                continue;
             }
         }
 

@@ -19,9 +19,14 @@
 		<item name="wcf.page.groupAddSection.minecraftSync.sectionTitle"><![CDATA[Minecraft-Sync]]></item>
 		<item name="wcf.page.groupAddSection.minecraftSync.error.unknownMinecraftID"><![CDATA[Unbekannter Minecraft mit ID <code>{$minecraftID}</code>]]></item>
 		<item name="wcf.page.groupAddSection.minecraftSync.error.unknownGroupName"><![CDATA[Unbekannte Gruppe für den Server mit ID <code>{$minecraftID}</code>.]]></item>
+		<item name="wcf.page.groupAddSection.minecraftSync.minecraftUserSyncResult.objectID"><![CDATA[ObjectID]]></item>
+		<item name="wcf.page.groupAddSection.minecraftSync.minecraftUserSyncResult.added"><![CDATA[Hinzugefügt]]></item>
+		<item name="wcf.page.groupAddSection.minecraftSync.minecraftUserSyncResult.removed"><![CDATA[Entfernt]]></item>
+		<item name="wcf.page.groupAddSection.minecraftSync.minecraftUserSyncResult.error.statusCode"><![CDATA[Fehlercode]]></item>
+		<item name="wcf.page.groupAddSection.minecraftSync.minecraftUserSyncResult.error.status"><![CDATA[Fehlermeldung]]></item>
 	</category>
 	<category name="wcf.page.minecraftSyncUserAdd">
-		<item name="wcf.page.minecraftSyncUserAdd.button.status"><![CDATA[Status]]></item>
-		<item name="wcf.page.minecraftSyncUserAdd.button.status.result"><![CDATA[Antwort]]></item>
+		<item name="wcf.page.minecraftSyncUserAdd.button.sync"><![CDATA[Syncronisieren]]></item>
+		<item name="wcf.page.minecraftSyncUserAdd.button.sync.result"><![CDATA[Antwort]]></item>
 	</category>
 </language>
