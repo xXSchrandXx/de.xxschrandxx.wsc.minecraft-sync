@@ -26,6 +26,12 @@
 				<optiontype>integer</optiontype>
 				<defaultvalue>100</defaultvalue>
 			</option>
+			<option name="minecraft_sync_branding">
+				<categoryname>minecraft_sync_general</categoryname>
+				<optiontype>boolean</optiontype>
+				<defaultvalue>1</defaultvalue>
+				<hidden>1</hidden>
+			</option>
 		</options>
 	</import>
 </data>

@@ -31,5 +31,30 @@
 			<environment>all</environment>
 			<listenerclassname>wcf\system\event\listener\MinecraftSyncUserDeleteListener</listenerclassname>
 		</eventlistener>
+		<!-- Fügt Branding zu den Minecraft-Linker Seiten hinzu -->
+		<eventlistener name="minecraftSyncBrandingUserAddForm">
+			<eventclassname>wcf\form\MinecraftUserAddForm</eventclassname>
+			<eventname>assignVariables</eventname>
+			<environment>all</environment>
+			<listenerclassname>wcf\system\event\listener\MinecraftSyncBrandingListener</listenerclassname>
+		</eventlistener>
+		<eventlistener name="minecraftSyncBrandingUserEditForm">
+			<eventclassname>wcf\form\MinecraftUserAddEdit</eventclassname>
+			<eventname>assignVariables</eventname>
+			<environment>all</environment>
+			<listenerclassname>wcf\system\event\listener\MinecraftSyncBrandingListener</listenerclassname>
+		</eventlistener>
+		<eventlistener name="minecraftSyncBrandingUserCheckForm">
+			<eventclassname>wcf\form\MinecraftUserCheckForm</eventclassname>
+			<eventname>assignVariables</eventname>
+			<environment>all</environment>
+			<listenerclassname>wcf\system\event\listener\MinecraftSyncBrandingListener</listenerclassname>
+		</eventlistener>
+		<eventlistener name="minecraftSyncBrandingUserListPage">
+			<eventclassname>wcf\page\MinecraftUserListPage</eventclassname>
+			<eventname>assignVariables</eventname>
+			<environment>all</environment>
+			<listenerclassname>wcf\system\event\listener\MinecraftSyncBrandingListener</listenerclassname>
+		</eventlistener>
 	</import>
 </data>

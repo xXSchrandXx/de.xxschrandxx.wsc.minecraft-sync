@@ -330,7 +330,7 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
         $result = [
             'added' => [],
             'removed' => [],
-            'error' => []
+            'error' => $response['error']
         ];
         if (array_key_exists('benchmark', $response)) {
                 $result['benchmark'] = $response['benchmark'];
@@ -616,11 +616,31 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
          * @var array
          */
         $minecraftHasGroupsFiltered = [];
+
+        $error = [];
         foreach ($uuidsMinecraftHasGroups as $minecraftID => $a) {
             if (!is_array($a)) {
+                $r = [
+                    'status' => 'Response is no array.',
+                    'statusCode' => 0
+                ];
+                if (array_key_exists($minecraftID, $error)) {
+                    array_push($error, $r);
+                } else {
+                    $error[$minecraftID] = [$r];
+                }
                 continue;
             }
             if (!array_key_exists('users', $a)) {
+                $r = [
+                    'status' => $a['status'],
+                    'statusCode' => $a['statusCode']
+                ];
+                if (array_key_exists($minecraftID, $error)) {
+                    array_push($error, $r);
+                } else {
+                    $error[$minecraftID] = [$r];
+                }
                 continue;
             }
             $minecraftHasGroups = $a['users'];
@@ -748,16 +768,23 @@ class MinecraftSyncHandler extends AbstractMultipleMinecraftHandler implements I
 
         $response = [
             'added' => [],
-            'removed' => []
+            'removed' => [],
+            'error' => $error
         ];
 
         // 10 Gruppen hinzufügen
         foreach ($needToAdd as $minecraftID => $map) {
+            if (array_key_exists($minecraftID, $error)) {
+                continue;
+            }
             $response['added'][$minecraftID] = $this->addUsersToGroups($map, $minecraftID);
         }
 
         // 11 Gruppen entfernen
         foreach ($needToRemove as $minecraftID => $map) {
+            if (array_key_exists($minecraftID, $error)) {
+                continue;
+            }
             $response['removed'][$minecraftID] = $this->removeUsersFromGroups($map, $minecraftID);
         }
 
