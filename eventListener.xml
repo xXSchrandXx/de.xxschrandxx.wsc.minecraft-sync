@@ -2,34 +2,13 @@
 <data xmlns="https://www.woltlab.com"
 	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.woltlab.com https://www.woltlab.com/XSD/5.5/eventListener.xsd">
 	<import>
-		<!-- Synchronisiert alle, wenn Daten einer Gruppe geändert werden -->
+		<!-- Fügt groupOptionen hinzu -->
 		<eventlistener name="minecraftACPGroupAdd">
 			<eventclassname>wcf\acp\form\UserGroupAddForm</eventclassname>
-			<eventname>readFormParameters,validate,save,saved,assignVariables</eventname>
+			<eventname>assignVariables</eventname>
 			<environment>admin</environment>
 			<inherit>1</inherit>
 			<listenerclassname>wcf\system\event\listener\MinecraftSyncAcpGroupAddListener</listenerclassname>
-		</eventlistener>
-		<!-- Synchronisiert einen Benutzer, wenn ein MinecraftUser hinzugefügt und entfernt wird -->
-		<eventlistener name="minecraftUserModify">
-			<eventclassname>wcf\data\user\minecraft\MinecraftUserAction</eventclassname>
-			<eventname>finalizeAction</eventname>
-			<environment>all</environment>
-			<listenerclassname>wcf\system\event\listener\MinecraftSyncMinecraftLinkerListener</listenerclassname>
-		</eventlistener>
-		<!-- Synchronisiert einen Benutzer, wenn seine Gruppen geändert werden -->
-		<eventlistener name="minecraftUserChangeGroup">
-			<eventclassname>wcf\data\user\UserAction</eventclassname>
-			<eventname>finalizeAction</eventname>
-			<environment>all</environment>
-			<listenerclassname>wcf\system\event\listener\MinecraftSyncUserChangeGroupListener</listenerclassname>
-		</eventlistener>
-		<!-- Entferne aus Gruppen, wenn ein Benutzer entfernt wird -->
-		<eventlistener name="minecraftUserDelete">
-			<eventclassname>wcf\data\user\UserAction</eventclassname>
-			<eventname>initializeAction</eventname>
-			<environment>all</environment>
-			<listenerclassname>wcf\system\event\listener\MinecraftSyncUserDeleteListener</listenerclassname>
 		</eventlistener>
 		<!-- Fügt Branding zu den Minecraft-Linker Seiten hinzu -->
 		<eventlistener name="minecraftSyncBrandingUserAddForm">

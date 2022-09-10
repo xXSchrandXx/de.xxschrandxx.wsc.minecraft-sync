@@ -21,11 +21,6 @@
 				<categoryname>minecraft_sync_general</categoryname>
 				<optiontype>MinecraftConnectionMultiSelect</optiontype>
 			</option>
-			<option name="minecraft_sync_entries_per_call">
-				<categoryname>minecraft_sync_general</categoryname>
-				<optiontype>integer</optiontype>
-				<defaultvalue>100</defaultvalue>
-			</option>
 			<option name="minecraft_sync_branding">
 				<categoryname>minecraft_sync_general</categoryname>
 				<optiontype>boolean</optiontype>
