@@ -14,7 +14,6 @@ Wenn nein, wird die Gruppe auf dem Minecraft-Server entfernt.]]></item>
 	</category>
 	<category name="wcf.acp.group">
 		<item name="wcf.acp.group.minecraftSection.minecraftSync.sectionTitle"><![CDATA[Minecraft-Sync]]></item>
-		<item name="wcf.acp.group.minecraftSection.minecraftSync.list.minecraftGroupID"><![CDATA[ID]]></item>
 		<item name="wcf.acp.group.minecraftSection.minecraftSync.list.minecraftName"><![CDATA[Minecraft-Gruppenname]]></item>
 		<item name="wcf.acp.group.minecraftSection.minecraftSync.list.shouldHave"><![CDATA[Vergeben]]></item>
 		<!-- userGroupOption -->

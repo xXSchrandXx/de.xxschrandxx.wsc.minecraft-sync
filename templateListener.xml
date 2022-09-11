@@ -17,12 +17,6 @@
 			<eventname>sections</eventname>
 			<templatecode><![CDATA[{include file='__minecraftSyncGroupAddSection'}]]></templatecode>
 		</templatelistener>
-		<templatelistener name="userAddButton">
-			<environment>admin</environment>
-			<templatename>__minecraftUserAddSection</templatename>
-			<eventname>rowButtons</eventname>
-			<templatecode><![CDATA[{include file='minecraftSyncUserAddButtons'}]]></templatecode>
-		</templatelistener>
 		<!-- /admin -->
 	</import>
 </data>

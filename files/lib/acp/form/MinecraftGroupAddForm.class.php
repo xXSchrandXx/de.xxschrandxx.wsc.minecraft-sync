@@ -125,7 +125,7 @@ class MinecraftGroupAddForm extends AbstractFormBuilderForm
                                 return;
                             }
                             $minecraftGroupList = new MinecraftGroupList();
-                            $minecraftGroupList->getConditionBuilder()->add('minecraftName = ? AND minecraftID = ?', [$field->getValue(), $this->minecraft->getObjectID()]);
+                            $minecraftGroupList->getConditionBuilder()->add('minecraftName = ? AND minecraftID = ? AND groupID = ?', [$field->getValue(), $this->minecraft->getObjectID(), $this->group->getObjectID()]);
                             if ($minecraftGroupList->countObjects() > 0) {
                                 $field->addValidationError(
                                     new FormFieldValidationError(

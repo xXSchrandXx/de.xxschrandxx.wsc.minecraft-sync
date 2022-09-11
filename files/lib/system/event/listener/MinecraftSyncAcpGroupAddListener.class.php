@@ -2,14 +2,9 @@
 
 namespace wcf\system\event\listener;
 
-use wcf\acp\form\UserGroupEditForm;
 use wcf\data\minecraft\MinecraftList;
 use wcf\data\user\group\minecraft\MinecraftGroupList;
-use wcf\system\exception\SystemException;
-use wcf\system\exception\UserInputException;
-use wcf\system\minecraft\MinecraftSyncHandler;
 use wcf\system\WCF;
-use wcf\util\JSON;
 use wcf\util\StringUtil;
 
 class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener

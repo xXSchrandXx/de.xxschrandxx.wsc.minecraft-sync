@@ -35,7 +35,7 @@
 											<thead>
 												<tr>
 													<th></th>
-													<th>{lang}wcf.acp.group.minecraftSection.minecraftSync.list.minecraftGroupID{/lang}</th>
+													<th>{lang}wcf.global.objectID{/lang}</th>
 													<th>{lang}wcf.acp.group.minecraftSection.minecraftSync.list.minecraftName{/lang}</th>
 													<th>{lang}wcf.acp.group.minecraftSection.minecraftSync.list.shouldHave{/lang}</th>
 												</tr>
