@@ -9,8 +9,8 @@
 		<item name="wcf.acp.form.minecraftGroupAdd.minecraftName.description"><![CDATA[Name oder Nummer der Minecraft-Gruppe auf dem Minecraft-Server.]]></item>
 		<item name="wcf.acp.form.minecraftGroupAdd.minecraftName.error.duplicate"><![CDATA[Ein Eintrag mit diesem Minecraft-Gruppenname existiert bereits.]]></item>
 		<item name="wcf.acp.form.minecraftGroupAdd.shouldHave"><![CDATA[Vergeben]]></item>
-		<item name="wcf.acp.form.minecraftGroupAdd.shouldHave.description"><![CDATA[Wenn ja, wird die Gruppe auf dem Minecraft-Server vergeben.
-Wenn nein, wird die Gruppe auf dem Minecraft-Server entfernt.]]></item>
+		<item name="wcf.acp.form.minecraftGroupAdd.shouldHave.description"><![CDATA[<p>Wenn ja, wird die Gruppe auf dem Minecraft-Server vergeben.</p>
+<p>Wenn nein, wird die Gruppe auf dem Minecraft-Server entfernt.</p>]]></item>
 	</category>
 	<category name="wcf.acp.group">
 		<item name="wcf.acp.group.minecraftSection.minecraftSync.sectionTitle"><![CDATA[Minecraft-Sync]]></item>
@@ -23,11 +23,9 @@ Wenn nein, wird die Gruppe auf dem Minecraft-Server entfernt.]]></item>
 		<item name="wcf.acp.option.category.minecraft_sync"><![CDATA[Minecraft-Sync]]></item>
 		<item name="wcf.acp.option.category.minecraft_sync_general"><![CDATA[Allgemeine Einstellungen]]></item>
 		<item name="wcf.acp.option.minecraft_sync_enabled"><![CDATA[Minecraft-Sync aktivieren]]></item>
-		<item name="wcf.acp.option.minecraft_sync_enabled.description"><![CDATA[Aktiviert / Deaktiviert den Minecraft-Sync.
-Link für Plugin-Konfiguration: <kbd>{link controller='MinecraftSyncGetGroups' forceFrontend=true}{/link}</kbd>]]></item>
+		<item name="wcf.acp.option.minecraft_sync_enabled.description"><![CDATA[<p>Aktiviert / Deaktiviert den Minecraft-Sync.</p>
+<p>Link für Plugin-Konfiguration: <kbd>{link controller='MinecraftSyncGetGroups' forceFrontend=true}{/link}</kbd></p>]]></item>
 		<item name="wcf.acp.option.minecraft_sync_identity"><![CDATA[Server]]></item>
-		<item name="wcf.acp.option.minecraft_sync_entries_per_call"><![CDATA[Maximale Call Einträge]]></item>
-		<item name="wcf.acp.option.minecraft_sync_entries_per_call.description"><![CDATA[Wenn dieser Wert zu hoch gesetzt wird, droht ein timeout beim synchronisieren.]]></item>
 	</category>
 	<category name="wcf.copyright">
 		<item name="wcf.copyright.minecraft-sync"><![CDATA[xXSchrandXx's Minecraft-Sync]]></item>

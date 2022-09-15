@@ -96,7 +96,7 @@ class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
 
         return $this->send('OK', 200, [
             'shouldHave' => $shouldHave,
-            'shoudlNotHave' => $shouldNotHave
+            'shouldNotHave' => $shouldNotHave
         ]);
     }
 }

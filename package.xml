@@ -7,8 +7,8 @@
 		<packagename language="de"><![CDATA[Minecraft-Sync]]></packagename>
 		<packagedescription><![CDATA[Syncs Groups between Minecraft and WSC.]]></packagedescription>
 		<packagedescription language="de"><![CDATA[Synchronisiert Gruppen zwischen Minecraft und WSC.]]></packagedescription>
-		<version>2.0.0 dev 1</version>
-		<date>2022-05-19</date>
+		<version>2.0.0</version>
+		<date>2022-09-15</date>
 	</packageinformation>
 
 	<authorinformation>
