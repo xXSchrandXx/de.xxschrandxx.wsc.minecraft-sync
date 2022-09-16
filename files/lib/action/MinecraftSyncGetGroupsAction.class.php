@@ -4,9 +4,7 @@ namespace wcf\action;
 
 use Laminas\Diactoros\Response\JsonResponse;
 use wcf\data\user\group\minecraft\MinecraftGroupList;
-use wcf\data\user\group\UserGroup;
 use wcf\data\user\group\UserGroupList;
-use wcf\util\JSON;
 use wcf\util\MinecraftLinkerUtil;
 
 /**
@@ -18,6 +16,11 @@ use wcf\util\MinecraftLinkerUtil;
  */
 class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
 {
+    /**
+     * @inheritDoc
+     */
+    public $neededModules = ['MINECRAFT_SYNC_ENABLED'];
+
     /**
      * @var \wcf\data\user\User
      */
@@ -41,6 +44,7 @@ class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
 
         return $result;
     }
+
     /**
      * @inheritdoc
      */
