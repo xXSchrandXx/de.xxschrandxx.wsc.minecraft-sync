@@ -2,9 +2,6 @@
 PACKAGE_NAME=de.xxschrandxx.wsc.minecraft-sync
 PACKAGE_TYPES=(acptemplates files templates)
 
-rm -rf files/js/*
-tsc
-
 for i in "${PACKAGE_TYPES[@]}"
 do
     rm -rf ${i}.tar

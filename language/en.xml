@@ -2,34 +2,32 @@
 <language languagecode="en"
 	xmlns="https://www.woltlab.com"
 	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.woltlab.com https://www.woltlab.com/XSD/5.5/language.xsd">
-	<category name="wcf.copyright">
-		<item name="wcf.copyright.minecraft-sync"><![CDATA[xXSchrandXx's Minecraft-Sync]]></item>
+	<category name="wcf.acp.form">
+		<item name="wcf.acp.form.minecraftGroupAdd.formTitle.add"><![CDATA[Add Minecraft-Group]]></item>
+		<item name="wcf.acp.form.minecraftGroupAdd.formTitle.edit"><![CDATA[Edit Minecraft-Group]]></item>
+		<item name="wcf.acp.form.minecraftGroupAdd.minecraftName"><![CDATA[Minecraft-Groupname]]></item>
+		<item name="wcf.acp.form.minecraftGroupAdd.minecraftName.description"><![CDATA[Name or number of the Minecraft group on the Minecraft server.]]></item>
+		<item name="wcf.acp.form.minecraftGroupAdd.minecraftName.error.duplicate"><![CDATA[An entry with this Minecraft group name already exists.]]></item>
+		<item name="wcf.acp.form.minecraftGroupAdd.shouldHave"><![CDATA[Assign]]></item>
+		<item name="wcf.acp.form.minecraftGroupAdd.shouldHave.description"><![CDATA[<p>If so, the group will be assigned on the Minecraft server.</p>
+<p>If no, the group will be removed from the Minecraft server.</p>]]></item>
 	</category>
 	<category name="wcf.acp.group">
-		<item name="wcf.acp.group.option.admin.minecraftSync.canManage"><![CDATA[Can manage Minecraft sync]]></item>
+		<item name="wcf.acp.group.minecraftSection.minecraftSync.sectionTitle"><![CDATA[Minecraft-Sync]]></item>
+		<item name="wcf.acp.group.minecraftSection.minecraftSync.list.minecraftName"><![CDATA[Minecraft-Groupname]]></item>
+		<item name="wcf.acp.group.minecraftSection.minecraftSync.list.shouldHave"><![CDATA[Assign]]></item>
+		<!-- userGroupOption -->
+		<item name="wcf.acp.group.option.admin.minecraftSync.canManage"><![CDATA[Can manage Minecraft-Sync]]></item>
 	</category>
 	<category name="wcf.acp.option">
 		<item name="wcf.acp.option.category.minecraft_sync"><![CDATA[Minecraft-Sync]]></item>
 		<item name="wcf.acp.option.category.minecraft_sync_general"><![CDATA[General Settings]]></item>
-		<item name="wcf.acp.option.minecraft_sync_enabled"><![CDATA[Activate Minecraft-Sync]]></item>
+		<item name="wcf.acp.option.minecraft_sync_enabled"><![CDATA[Enable Minecraft-Sync]]></item>
+		<item name="wcf.acp.option.minecraft_sync_enabled.description"><![CDATA[<p>Enables / disables Minecraft-Sync.</p>
+<p>Link for plugin configuration: <kbd>{link controller='MinecraftSyncGetGroups' forceFrontend=true}{/link}</kbd></p>]]></item>
 		<item name="wcf.acp.option.minecraft_sync_identity"><![CDATA[Server]]></item>
-		<item name="wcf.acp.option.minecraft_sync_entries_per_call"><![CDATA[Maximum call entries]]></item>
-		<item name="wcf.acp.option.minecraft_sync_entries_per_call.description"><![CDATA[If this value is set too high, there is a risk of a timeout when synchronizing.]]></item>
 	</category>
-	<category name="wcf.page.groupAddSection">
-		<item name="wcf.page.groupAddSection.minecraftSync.minecraftGroupNames"><![CDATA[Groups]]></item>
-		<item name="wcf.page.groupAddSection.minecraftSync.minecraftGroupName.description"><![CDATA[Selected groups are synchronized on the server.]]></item>
-		<item name="wcf.page.groupAddSection.minecraftSync.sectionTitle"><![CDATA[Minecraft-Sync]]></item>
-		<item name="wcf.page.groupAddSection.minecraftSync.error.unknownMinecraftID"><![CDATA[Unknown minecraft with id <code>{$minecraftID}</code>]]></item>
-		<item name="wcf.page.groupAddSection.minecraftSync.error.unknownGroupName"><![CDATA[Unknown group for Server with id <code>{$minecraftID}</code>.]]></item>
-		<item name="wcf.page.groupAddSection.minecraftSync.minecraftUserSyncResult.objectID"><![CDATA[ObjectID]]></item>
-		<item name="wcf.page.groupAddSection.minecraftSync.minecraftUserSyncResult.added"><![CDATA[Added]]></item>
-		<item name="wcf.page.groupAddSection.minecraftSync.minecraftUserSyncResult.removed"><![CDATA[Removed]]></item>
-		<item name="wcf.page.groupAddSection.minecraftSync.minecraftUserSyncResult.error.statusCode"><![CDATA[Error code]]></item>
-		<item name="wcf.page.groupAddSection.minecraftSync.minecraftUserSyncResult.error.status"><![CDATA[Error message]]></item>
-	</category>
-	<category name="wcf.page.minecraftSyncUserAdd">
-		<item name="wcf.page.minecraftSyncUserAdd.button.sync"><![CDATA[Synchronize]]></item>
-		<item name="wcf.page.minecraftSyncUserAdd.button.sync.result"><![CDATA[Response]]></item>
+	<category name="wcf.copyright">
+		<item name="wcf.copyright.minecraft-sync"><![CDATA[xXSchrandXx's Minecraft-Sync]]></item>
 	</category>
 </language>
