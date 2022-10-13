@@ -22,6 +22,11 @@ class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
     public $neededModules = ['MINECRAFT_SYNC_ENABLED'];
 
     /**
+     * @inheritDoc
+     */
+    protected $availableMinecraftIDs = MINECRAFT_SYNC_IDENTITY;
+
+    /**
      * @var \wcf\data\user\User
      */
     protected $user;
@@ -55,7 +60,7 @@ class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
         $groupIDs = $this->user->getGroupIDs(true);
 
         $minecraftGroupList = new MinecraftGroupList();
-        $minecraftGroupList->getConditionBuilder()->add('minecraftID = ? AND groupID IN (?)', [$this->minecraftID, $groupIDs]);
+        $minecraftGroupList->getConditionBuilder()->add('minecraftID = ? AND groupID IN (?)', [$this->minecraft->minecraftID, $groupIDs]);
         $minecraftGroupList->readObjects();
         /** @var \wcf\data\user\group\minecraft\MinecraftGroup[] */
         $minecraftGroups = $minecraftGroupList->getObjects();

@@ -7,7 +7,7 @@
 		<packagename language="de"><![CDATA[Minecraft-Sync]]></packagename>
 		<packagedescription><![CDATA[Syncs Groups between Minecraft and WSC.]]></packagedescription>
 		<packagedescription language="de"><![CDATA[Synchronisiert Gruppen zwischen Minecraft und WSC.]]></packagedescription>
-		<version>2.0.0</version>
+		<version>2.0.1</version>
 		<date>2022-09-15</date>
 	</packageinformation>
 
@@ -17,7 +17,7 @@
 
 	<requiredpackages>
 		<requiredpackage minversion="5.5.0 RC 1">com.woltlab.wcf</requiredpackage>
-		<requiredpackage minversion="3.0.0 dev 1">de.xxschrandxx.wsc.minecraft-linker</requiredpackage>
+		<requiredpackage minversion="3.0.2 dev 1">de.xxschrandxx.wsc.minecraft-linker</requiredpackage>
 	</requiredpackages>
 
 	<excludedpackages>
