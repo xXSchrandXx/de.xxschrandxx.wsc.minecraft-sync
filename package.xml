@@ -25,6 +25,10 @@
 		<excludedpackage version="4.0.0">de.xxschrandxx.wsc.minecraft-linker</excludedpackage>
 	</excludedpackages>
 
+	<instructions type="update" fromversion="2.0.0">
+		<void/>
+	</instructions>
+
 	<instructions type="install">
 		<instruction type="acpTemplate"/>
 		<instruction type="eventListener"/>
