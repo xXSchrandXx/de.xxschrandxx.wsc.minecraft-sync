@@ -38,6 +38,10 @@ class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
     {
         $result = parent::readParameters();
 
+        if ($result !== null) {
+            return $result;
+        }
+
         $this->user = MinecraftLinkerUtil::getUser($this->uuid);
         if (!isset($this->user)) {
             if (ENABLE_DEBUG_MODE) {
