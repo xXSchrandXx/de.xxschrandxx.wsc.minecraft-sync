@@ -34,33 +34,25 @@ class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
     /**
      * @inheritDoc
      */
-    public function readParameters(): ?JsonResponse
+    public function readParameters()
     {
-        $result = parent::readParameters();
-
-        if ($result !== null) {
-            return $result;
-        }
+        parent::readParameters();
 
         $this->user = MinecraftLinkerUtil::getUser($this->uuid);
         if (!isset($this->user)) {
             if (ENABLE_DEBUG_MODE) {
-                return $this->send('Bad Request. \'uuid\' is not linked.', 400);
+                throw $this->exception('Bad Request. \'uuid\' is not linked.', 400);
             } else {
-                return $this->send('Bad request.', 400);
+                throw $this->exception('Bad request.', 400);
             }
         }
-
-        return $result;
     }
 
     /**
      * @inheritdoc
      */
-    public function execute(): ?JsonResponse
+    public function execute(): JsonResponse
     {
-        parent::execute();
-
         $groupIDs = $this->user->getGroupIDs(true);
 
         $minecraftGroupList = new MinecraftGroupList();
