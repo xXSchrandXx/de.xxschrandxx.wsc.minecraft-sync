@@ -34,7 +34,7 @@ class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
     /**
      * @inheritDoc
      */
-    public function readParameters()
+    public function readParameters(): void
     {
         parent::readParameters();
 
@@ -53,6 +53,8 @@ class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
      */
     public function execute(): JsonResponse
     {
+        parent::execute();
+
         $groupIDs = $this->user->getGroupIDs(true);
 
         $minecraftGroupList = new MinecraftGroupList();
