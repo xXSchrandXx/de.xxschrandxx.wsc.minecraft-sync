@@ -24,41 +24,26 @@ class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
     /**
      * @inheritDoc
      */
-    protected $availableMinecraftIDs = MINECRAFT_SYNC_IDENTITY;
-
-    /**
-     * @var \wcf\data\user\User
-     */
-    protected $user;
-
-    /**
-     * @inheritDoc
-     */
-    public function readParameters(): void
-    {
-        parent::readParameters();
-
-        $this->user = MinecraftLinkerUtil::getUser($this->uuid);
-        if (!isset($this->user)) {
-            if (ENABLE_DEBUG_MODE) {
-                throw $this->exception('Bad Request. \'uuid\' is not linked.', 400);
-            } else {
-                throw $this->exception('Bad request.', 400);
-            }
-        }
-    }
+    public $availableMinecraftIDs = MINECRAFT_SYNC_IDENTITY;
 
     /**
      * @inheritdoc
      */
-    public function execute(): JsonResponse
+    public function execute($parameters): JsonResponse
     {
-        parent::execute();
+        $user = MinecraftLinkerUtil::getUser($parameters['uuid']);
+        if (!isset($user)) {
+            if (ENABLE_DEBUG_MODE) {
+                return $this->send('Bad Request. \'uuid\' is not linked.', 400);
+            } else {
+                return $this->send('Bad request.', 400);
+            }
+        }
 
-        $groupIDs = $this->user->getGroupIDs(true);
+        $groupIDs = $user->getGroupIDs(true);
 
         $minecraftGroupList = new MinecraftGroupList();
-        $minecraftGroupList->getConditionBuilder()->add('minecraftID = ? AND groupID IN (?)', [$this->minecraft->minecraftID, $groupIDs]);
+        $minecraftGroupList->getConditionBuilder()->add('minecraftID = ? AND groupID IN (?)', [$parameters['minecraftID'], $groupIDs]);
         $minecraftGroupList->readObjects();
         /** @var \wcf\data\user\group\minecraft\MinecraftGroup[] */
         $minecraftGroups = $minecraftGroupList->getObjects();
