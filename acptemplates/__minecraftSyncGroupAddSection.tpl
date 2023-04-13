@@ -22,8 +22,7 @@
 									<ul>
 										<li>
 											<a href="{link controller='MinecraftGroupAdd' id=$groupID minecraftID=$minecraft->getObjectID()}{/link}" class="button">
-												<span class="icon icon16 fa-plus"></span>
-												<span>{lang}wcf.acp.form.minecraftGroupAdd.formTitle.add{/lang}</span>
+												{icon size=16 name='pencil' type='solid'} {lang}wcf.acp.form.minecraftGroupAdd.formTitle.add{/lang}
 											</a>
 										</li>
 										{event name='contentHeaderNavigation'}
@@ -40,13 +39,13 @@
 													<th>{lang}wcf.acp.group.minecraftSection.minecraftSync.list.shouldHave{/lang}</th>
 												</tr>
 											</thead>
-											<tbody>
+											<tbody class="jsReloadPageWhenEmpty">
 												{foreach from=$minecraftGroups[$minecraft->minecraftID] item=minecraftGroup}
 													<tr class="jsObjectActionObject" data-object-id="{@$minecraftGroup->getObjectID()}">
 														<td class="columnIcon">
 															<a href="{link controller='MinecraftGroupEdit' id=$minecraftGroup->getObjectID()}{/link}"
 																title="{lang}wcf.global.button.edit{/lang}" class="jsTooltip">
-																<span class="icon icon16 fa-pencil"></span>
+																{icon size=16 name='pencil' type='solid'}
 															</a>
 															{objectAction action="delete" objectTitle=$minecraftGroup->getGroupName()}
 														</td>
