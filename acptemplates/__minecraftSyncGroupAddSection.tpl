@@ -3,7 +3,7 @@
 		<h2 class="sectionTitle">{lang}wcf.acp.group.minecraftSection.minecraftSync.sectionTitle{/lang}</h2>
 
 		{if $minecrafts|count > 0}
-			<div class="section tabMenuContainer" data-active="minecraft-sync-{$minecrafts|array_keys|min}" data-store="activeTabMenuItem">
+			<div class="tabMenuContainer" data-active="minecraft-sync-{$minecrafts|array_keys|min}" data-store="activeTabMenuItem">
 				<nav class="tabMenu">
 					<ul>
 						{foreach from=$minecrafts item=minecraft}
