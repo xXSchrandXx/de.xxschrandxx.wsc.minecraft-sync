@@ -8,7 +8,7 @@
 					<ul>
 						{foreach from=$minecrafts item=minecraft}
 							<li>
-								<a href="#minecraft-sync-{$minecraft->getObjectID()}">{$minecraft->name}</a>
+								<a href="#minecraft-sync-{$minecraft->getObjectID()}">{$minecraft->getTitle()}</a>
 							</li>
 						{/foreach}
 					</ul>
