@@ -39,7 +39,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
         WCF::getTPL()->assign(
             [
                 'minecrafts' => $minecrafts,
-                'minecraftGroups' => $minecraftGroups,
+                'minecraftGroups' => $minecraftGroups
             ]
         );
     }
