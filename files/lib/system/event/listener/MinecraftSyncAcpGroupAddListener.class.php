@@ -11,6 +11,7 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
 {
     /**
      * @inheritDoc
+     * @param \wcf\acp\form\UserGroupEditForm $eventObj
      */
     public function execute($eventObj, $className, $eventName, array &$parameters)
     {
@@ -18,6 +19,9 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
             return;
         }
         if (!WCF::getSession()->getPermission('admin.minecraftSync.canManage')) {
+            return;
+        }
+        if (!($eventObj instanceof \wcf\acp\form\UserGroupEditForm)) {
             return;
         }
 
@@ -30,14 +34,14 @@ class MinecraftSyncAcpGroupAddListener implements IParameterizedEventListener
         $minecraftGroups = [];
         foreach ($minecrafts as $minecraftID => $minecraft) {
             $minecraftGroupList = new MinecraftGroupList();
-            $minecraftGroupList->getConditionBuilder()->add('groupID = ? AND minecraftID = ?', [$_REQUEST['id'], $minecraftID]);
+            $minecraftGroupList->getConditionBuilder()->add('groupID = ? AND minecraftID = ?', [$eventObj->groupID, $minecraftID]);
             $minecraftGroupList->readObjects();
             $minecraftGroups[$minecraftID] = $minecraftGroupList->getObjects();
         }
 
-        // assign variables
         WCF::getTPL()->assign(
             [
+                'groupID' => $eventObj->groupID,
                 'minecrafts' => $minecrafts,
                 'minecraftGroups' => $minecraftGroups
             ]

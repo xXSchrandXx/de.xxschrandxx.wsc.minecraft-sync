@@ -1,8 +1,8 @@
-{if MINECRAFT_SYNC_ENABLED && MINECRAFT_SYNC_IDENTITY}
+{if MINECRAFT_SYNC_ENABLED && MINECRAFT_SYNC_IDENTITY && $groupID|isset}
 	<div class="section">
 		<h2 class="sectionTitle">{lang}wcf.acp.group.minecraftSection.minecraftSync.sectionTitle{/lang}</h2>
 
-		{if $minecrafts|count > 0}
+		{if $minecrafts|isset && $minecrafts|count > 0}
 			<div class="tabMenuContainer" data-active="minecraft-sync-{$minecrafts|array_keys|min}" data-store="activeTabMenuItem">
 				<nav class="tabMenu">
 					<ul>
