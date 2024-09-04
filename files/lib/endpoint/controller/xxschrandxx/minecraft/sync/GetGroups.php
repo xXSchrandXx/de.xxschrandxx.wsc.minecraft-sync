@@ -1,21 +1,17 @@
 <?php
 
-namespace wcf\action;
+namespace wcf\system\endpoint\controller\xxschrandxx\minecraft\linker;
 
 use Laminas\Diactoros\Response\JsonResponse;
+use Psr\Http\Message\ResponseInterface;
 use wcf\data\user\group\minecraft\MinecraftGroupList;
 use wcf\data\user\group\UserGroupList;
+use wcf\system\endpoint\GetRequest;
+use wcf\system\exception\UserInputException;
 use wcf\util\MinecraftLinkerUtil;
 
-/**
- * MinecraftSyncGetGroup action class
- *
- * @author   xXSchrandXx
- * @license  Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
- * @package  WoltLabSuite\Core\Action
- */
-#[\wcf\http\attribute\DisableXsrfCheck]
-class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
+#[GetRequest('/xxschrandxx/minecraft/{id:\d+}/{uuid:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}}/groups')]
+final class GetGroups extends AbstractMinecraftLinker
 {
     /**
      * @inheritDoc
@@ -28,23 +24,23 @@ class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
     public $availableMinecraftIDs = MINECRAFT_SYNC_IDENTITY;
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
-    public function execute($parameters): JsonResponse
+    public function execute(): ResponseInterface
     {
-        $user = MinecraftLinkerUtil::getUser($parameters['uuid']);
+        $user = MinecraftLinkerUtil::getUser($this->uuid);
         if (!isset($user)) {
             if (ENABLE_DEBUG_MODE) {
-                return $this->send('Bad Request. \'uuid\' is not linked.', 400);
+                throw new UserInputException('Bad Request. \'uuid\' is not linked.', 400);
             } else {
-                return $this->send('Bad request.', 400);
+                throw new UserInputException('Bad request.', 400);
             }
         }
 
         $groupIDs = $user->getGroupIDs(true);
 
         $minecraftGroupList = new MinecraftGroupList();
-        $minecraftGroupList->getConditionBuilder()->add('minecraftID = ? AND groupID IN (?)', [$parameters['minecraftID'], $groupIDs]);
+        $minecraftGroupList->getConditionBuilder()->add('minecraftID = ? AND groupID IN (?)', [$this->minecraftID, $groupIDs]);
         $minecraftGroupList->readObjects();
         /** @var \wcf\data\user\group\minecraft\MinecraftGroup[] */
         $minecraftGroups = $minecraftGroupList->getObjects();
@@ -87,7 +83,7 @@ class MinecraftSyncGetGroupsAction extends AbstractMinecraftLinkerAction
         ksort($shouldHave, SORT_NUMERIC);
         ksort($shouldNotHave, SORT_NUMERIC);
 
-        return $this->send('OK', 200, [
+        return new JsonResponse([
             'shouldHave' => $shouldHave,
             'shouldNotHave' => $shouldNotHave
         ]);
