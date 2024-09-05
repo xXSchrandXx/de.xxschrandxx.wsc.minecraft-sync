@@ -1,7 +1,7 @@
 <?php
 
 use wcf\event\endpoint\ControllerCollecting;
-use wcf\system\endpoint\controller\xxschrandxx\minecraft\linker\GetGroups;
+use wcf\system\endpoint\controller\xxschrandxx\minecraft\sync\GetGroups;
 use wcf\system\event\EventHandler;
 
 return static function (): void {
